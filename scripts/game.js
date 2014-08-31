@@ -23,7 +23,7 @@ var reloadGame = function (){
 	GAME.machine.invaders.length = 0;
 
 	/////////////////////////////////////////////////////////
-	GAME.machine.invaders.push(new Asset(50,50,10,10));
+	GAME.machine.invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10) );
 	/////////////////////////////////////////////////////////
 };
 
@@ -105,14 +105,24 @@ var moveAsset = function (){
 
 			// MOVE ENEMIES
 			for (var j = 0, long = invaders.length; j < long; j++) {
+				
 				// SHOT ONTERSEVT ENEMIES
 				for (var k = 0, all = spaceShot.length; k < all; k++) {
 				    if( spaceShot[k].intersect(invaders[j]) ){
-				    	GAME.score++;
+				    	GAME.score++; // score increased by 1 point
+				    	invaders[j].posY = 0;// recycle enemy, new position 
+				    	invaders[j].posX = random(GAME.canvas.width/10)*10;
+				    	if( GAME.score % 5 === 0){ // hard level each 5 points
+				    		invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10) );
+				    	}
 
+				    	// destroy the intersected sohot
+				    	spaceShot.splice( k--, 1 );
+				    	all--;
 				    }
-				};
+				}
 
+				// NEW ENEMY POSITION
 				invaders[j].posY += (invaders[j].h/2); //half velocity movement
 
 				if( invaders[j].posY > GAME.canvas.height ){ // enemy limit movement
