@@ -1,7 +1,12 @@
 ///////////////////////////
-// CONSTRUCTOR DE INVADERS //
+// CONSTRUCTOR DE ASSETS //
 ///////////////////////////
-
+var Asset = function (x, y, w, h){
+	this.posX = x || 0;
+	this.posY = y || 0;
+	this.w  = w || w;
+	this.h = h || h;
+};
 
 /////////////////////////
 // CONSTRUCTOR ESCENAS //
@@ -15,11 +20,12 @@ var GAME = {
 	canvas: document.querySelector('.invadersCanvas canvas'),
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
 	paused : false,
-	asset: {
-		posX: 50,
-		posY: 50,
-		w: 10,
-		h: 10
+	player: {
+		spaceShip: new Asset(0, 0, 10, 10),
+		spaceShot: []
+	},
+	machine:{
+		invaders: []
 	},
 	keys: {
 		lastPress: null,

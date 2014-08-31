@@ -2,9 +2,18 @@ var init = function (evLoad){
 	document.addEventListener('keydown', onKeyPressed, false);
 	document.addEventListener('keyup', offKeyPressed, false);
 	window.addEventListener('resize', setCanvasFullScreen, false);
+
+	reloadGame();
 	setCanvasFullScreen();
 	run();
 	repaint();
+};
+
+// reset game variables
+var reloadGame = function (){
+	var spaceShip = GAME.player.spaceShip;
+	spaceShip.posX = (GAME.canvas.width/2) - (spaceShip.w/2);
+	spaceShip.posY = GAME.canvas.height - 30;
 };
 
 // indicar el estado de tecla presionada
@@ -39,26 +48,19 @@ var moveAsset = function (){
 	}
 
 	if( !GAME.paused ){
+		var spaceShip = GAME.player.spaceShip;
 		// Movimientos del asset
-		if( GAME.keys.isPressing[ GAME.keys.allowed.KEY_UP ] ){
-			GAME.asset.posY -= GAME.asset.h;
-		} else if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
-			GAME.asset.posX += GAME.asset.w;
-		} else if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_DOWN ] ){
-			GAME.asset.posY += GAME.asset.h;
+		if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
+			spaceShip.posX += spaceShip.w;
 		} else if( GAME.keys.isPressing[ GAME.keys.allowed.KEY_LEFT ] ){
-			GAME.asset.posX -= GAME.asset.w;
+			spaceShip.posX -= spaceShip.w;
 		}
 
 		// fuera del lienzo
-		if( GAME.asset.posX > GAME.canvas.width )
-			GAME.asset.posX = 0;
-		if( GAME.asset.posY > GAME.canvas.height)
-			GAME.asset.posY = 0; 
-		if(GAME.asset.posX < 0)
-			GAME.asset.posX = GAME.canvas.width;
-		if(GAME.asset.posY < 0)
-			GAME.asset.posY = GAME.canvas.height;
+		if( spaceShip.posX > (GAME.canvas.width - spaceShip.w) )
+			spaceShip.posX = GAME.canvas.width - spaceShip.w;
+		if(spaceShip.posX < 0)
+			spaceShip.posX = 0;
 	}
 };
 
@@ -69,16 +71,17 @@ var paintCanvas = function(ctx){
 	if( GAME.paused ){
 	   ctx.textAlign = 'center';
 	   ctx.fillStyle ='#0f0';
-		ctx.fillText('PAUSE', 150, 75);
+		ctx.fillText('PAUSE', GAME.canvas.width/2, GAME.canvas.height/2);
 	}else{
+		var spaceShip = GAME.player.spaceShip;
 	   ctx.textAlign ='left';
 
 		ctx.fillStyle = '#0f0';
-		ctx.fillRect( GAME.asset.posX, GAME.asset.posY, GAME.asset.w, GAME.asset.h );
+		ctx.fillRect( spaceShip.posX, spaceShip.posY, spaceShip.w, spaceShip.h );
 		
 		ctx.fillStyle ='#fff';
 		// var showPress = GAME.keys.lastPress+' (' +GAME.keys.isPressing[ GAME.keys.lastPress ]+')';
-		ctx.fillText('Score: ' + GAME.score, 10, ctx.height-10);
+		ctx.fillText('Score: ' + GAME.score, 5, ctx.height-5);
 	}
 };
 
