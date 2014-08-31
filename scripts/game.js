@@ -113,14 +113,24 @@ var moveAsset = function (){
 				// SHOT INTERSECT ENEMIES
 				for (var k = 0, all = spaceShot.length; k < all; k++) {
 				    if( spaceShot[k].intersect(invaders[j]) ){
-				    	GAME.score++; // score increased by 1 point
-				    	invaders[j].posY = 0;// recycle enemy, new position 
-				    	invaders[j].posX = random(GAME.canvas.width/10)*10;
-				    	if( GAME.score % 3 === 0){ // hard level each 5 points
-				    		invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
-				    	}
 
-				    	// destroy the intersected sohot
+					   invaders[j].health--;
+					   
+					   if( invaders[j].health < 1 ){
+					    	// recycle enemy, new position 
+					    	invaders[j].posY = 0;
+					    	invaders[j].posX = random(GAME.canvas.width/10)*10;
+					   	invaders[j].setHealth(2);
+
+				    		GAME.score++; // score increased
+				    		
+				    		// increase level each 3 points (add one invader)
+					    	if( GAME.score % 3 === 0){
+					    		invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
+					    	}
+					   }
+
+				    	// destroy the intersected shot
 				    	spaceShot.splice( k--, 1 );
 				    	all--;
 				    }
