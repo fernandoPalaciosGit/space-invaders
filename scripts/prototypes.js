@@ -13,6 +13,16 @@ Asset.prototype.fill = function(ctx, color){
 	ctx.fillRect(this.posX, this.posY, this.w, this.h);
 };
 
+Asset.prototype.intersect = function(asset){
+	// this.constructor.prototype.isPrototypeOf(asset)
+	if( asset instanceof this.constructor ){
+		return	this.posX < (asset.posX + asset.w) &&
+					(this.posX + this.w) > asset.posX &&
+					this.posY < (asset.posY + asset.h) &&
+					(this.posY + this.h) > asset.posY;
+	}
+};
+
 /////////////////////////
 // CONSTRUCTOR ESCENAS //
 /////////////////////////

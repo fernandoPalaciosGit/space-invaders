@@ -16,7 +16,7 @@ var reloadGame = function (){
 	spaceShip.posY = GAME.canvas.height - 25;
 
 
-
+	GAME.paused = true;
 	GAME.gameover = false;
 	GAME.score = 0;
 	GAME.player.spaceShot.length = 0;
@@ -59,12 +59,15 @@ var moveAsset = function (){
 	}
 
 	if( !GAME.paused ){
-		var	spaceShip = GAME.player.spaceShip,
-				spaceShot = GAME.player.spaceShot;
 
 		if( GAME.gameover ){
 			reloadGame();
+
 		} else {
+			var	spaceShip = GAME.player.spaceShip,
+					spaceShot = GAME.player.spaceShot,
+					invaders = GAME.machine.invaders;
+
 			// SPACESHIP HORIZONTAL MOVEMENT
 			if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
 				spaceShip.posX += spaceShip.w;
@@ -80,7 +83,7 @@ var moveAsset = function (){
 				spaceShip.posX = 0;
 			}
 
-			// SOOTS (in front of spaceship)
+			// SHOOTS (in front of spaceship)
 			if (	GAME.keys.lastPress === GAME.keys.allowed.KEY_SPACE) {
 				var shotDim = 5;
 				spaceShot.push(
@@ -98,6 +101,28 @@ var moveAsset = function (){
 			    	spaceShot.splice( i--, 1);
 			    	len--;
 			    }
+			}
+
+			// MOVE ENEMIES
+			for (var j = 0, long = invaders.length; j < long; j++) {
+				// SHOT ONTERSEVT ENEMIES
+				for (var k = 0, all = spaceShot.length; k < all; k++) {
+				    if( spaceShot[k].intersect(invaders[j]) ){
+				    	GAME.score++;
+
+				    }
+				};
+
+				invaders[j].posY += (invaders[j].h/2); //half velocity movement
+
+				if( invaders[j].posY > GAME.canvas.height ){ // enemy limit movement
+					invaders[j].posY = 0;
+					invaders[j].posX = random(GAME.canvas.width/10)*10;
+				}
+
+				if( spaceShip.intersect(invaders[j]) ){ // spaceship intersect enemy
+					GAME.gameover = true;
+				} 
 			}
 		}
 
