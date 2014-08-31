@@ -6,7 +6,6 @@ body{
 h1{
 	color: #fff;
 }
-
 .invadersGame{
 	margin: 0 auto;
 	text-align: center;
@@ -18,7 +17,6 @@ h1{
 	/*como seteamos pantall completa el canvas, los bordes salen fuera de viewport*/
 	box-sizing: border-box;
 }
-
 .showLayer{
 	display: block !important;
 }

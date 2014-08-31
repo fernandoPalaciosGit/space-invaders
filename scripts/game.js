@@ -14,6 +14,17 @@ var reloadGame = function (){
 	var spaceShip = GAME.player.spaceShip;
 	spaceShip.posX = (GAME.canvas.width/2) - (spaceShip.w/2);
 	spaceShip.posY = GAME.canvas.height - 25;
+
+
+
+	GAME.gameover = false;
+	GAME.score = 0;
+	GAME.player.spaceShot.length = 0;
+	GAME.machine.invaders.length = 0;
+
+	/////////////////////////////////////////////////////////
+	GAME.machine.invaders.push(new Asset(50,50,10,10));
+	/////////////////////////////////////////////////////////
 };
 
 // indicar el estado de tecla presionada
@@ -51,39 +62,43 @@ var moveAsset = function (){
 		var	spaceShip = GAME.player.spaceShip,
 				spaceShot = GAME.player.spaceShot;
 
-		// SPACESHIP HORIZONTAL MOVEMENT
-		if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
-			spaceShip.posX += spaceShip.w;
-		} else if( GAME.keys.isPressing[ GAME.keys.allowed.KEY_LEFT ] ){
-			spaceShip.posX -= spaceShip.w;
-		}
+		if( GAME.gameover ){
+			reloadGame();
+		} else {
+			// SPACESHIP HORIZONTAL MOVEMENT
+			if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
+				spaceShip.posX += spaceShip.w;
+			} else if( GAME.keys.isPressing[ GAME.keys.allowed.KEY_LEFT ] ){
+				spaceShip.posX -= spaceShip.w;
+			}
 
-		// SPACESHIP LIMIT HORIZONTAL POSITION
-		if( spaceShip.posX > (GAME.canvas.width - spaceShip.w) ){
-			spaceShip.posX = GAME.canvas.width - spaceShip.w;
-		}
-		if(spaceShip.posX < 0) {
-			spaceShip.posX = 0;
-		}
+			// SPACESHIP LIMIT HORIZONTAL POSITION
+			if( spaceShip.posX > (GAME.canvas.width - spaceShip.w) ){
+				spaceShip.posX = GAME.canvas.width - spaceShip.w;
+			}
+			if(spaceShip.posX < 0) {
+				spaceShip.posX = 0;
+			}
 
-		// SOOTS (in front of spaceship)
-		if (	GAME.keys.lastPress === GAME.keys.allowed.KEY_SPACE) {
-			var shotDim = 5;
-			spaceShot.push(
-				new Asset(
-					spaceShip.posX + (spaceShip.w/2) - (shotDim/2),
-					spaceShip.posY,
-					shotDim, shotDim) );
-			GAME.keys.lastPress = null;
-		}
+			// SOOTS (in front of spaceship)
+			if (	GAME.keys.lastPress === GAME.keys.allowed.KEY_SPACE) {
+				var shotDim = 5;
+				spaceShot.push(
+					new Asset(
+						spaceShip.posX + (spaceShip.w/2) - (shotDim/2),
+						spaceShip.posY,
+						shotDim, shotDim) );
+				GAME.keys.lastPress = null;
+			}
 
-		// MOVE SOOTS
-		for (var i = 0, len = spaceShot.length; i < len; i++) {
-		    spaceShot[i].posY -= spaceShot[i].h;
-		    if( spaceShot[i].posY < 0 ){
-		    	spaceShot.splice( i--, 1);
-		    	len--;
-		    }
+			// MOVE SOOTS
+			for (var i = 0, len = spaceShot.length; i < len; i++) {
+			    spaceShot[i].posY -= spaceShot[i].h;
+			    if( spaceShot[i].posY < 0 ){
+			    	spaceShot.splice( i--, 1);
+			    	len--;
+			    }
+			}
 		}
 
 	}
@@ -99,12 +114,17 @@ var paintCanvas = function(ctx){
 		ctx.fillText('PAUSE', GAME.canvas.width/2, GAME.canvas.height/2);
 	}else{
 		var	spaceShip = GAME.player.spaceShip,
-				spaceShot = GAME.player.spaceShot;
+				spaceShot = GAME.player.spaceShot,
+				invaders = GAME.machine.invaders;
 
 		spaceShip.fill(ctx, '#0f0')
 
 		for( var i = 0, l = spaceShot.length; i <l ; i++ ){
 			spaceShot[i].fill(ctx, '#f00');
+		}
+
+		for( var j = 0, l = invaders.length; j <l ; j++ ){
+			invaders[j].fill(ctx, '#f0f');
 		}
 
 	   ctx.textAlign ='left';

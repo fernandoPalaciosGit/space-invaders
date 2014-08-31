@@ -24,7 +24,6 @@ Asset.prototype.fill = function(ctx, color){
 var GAME = {
 	canvas: document.querySelector('.invadersCanvas canvas'),
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
-	paused : false,
 	player: {
 		spaceShip: new Asset(0, 0, 10, 10),
 		spaceShot: []
@@ -44,5 +43,7 @@ var GAME = {
 			KEY_SPACE: 32
 		}
 	},
+	paused : false,
+	gameover: false,
 	score: 0
 };
