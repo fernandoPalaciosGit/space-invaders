@@ -1,6 +1,8 @@
 var init = function (evLoad){
 	document.addEventListener('keydown', onKeyPressed, false);
 	document.addEventListener('keyup', offKeyPressed, false);
+	window.addEventListener('resize', setCanvasFullScreen, false);
+	setCanvasFullScreen();
 	run();
 	repaint();
 };
@@ -24,7 +26,7 @@ var run = function (){
 
 var repaint = function (){
 	requestAnimFrame(repaint);
-	resizeBuffer();
+	resizeBuffer(350, 500);
 	paintCanvas(GAME.ctx);
 };
 
@@ -61,36 +63,23 @@ var moveAsset = function (){
 };
 
 var paintCanvas = function(ctx){
- 	ctx.fillStyle = '#000';
+ 	ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
 	ctx.fillRect(0, 0, GAME.canvas.width, GAME.canvas.height);
 	
 	if( GAME.paused ){
 	   ctx.textAlign = 'center';
-	   ctx.fillStyle='#0f0';
+	   ctx.fillStyle ='#0f0';
 		ctx.fillText('PAUSE', 150, 75);
 	}else{
-	   ctx.textAlign='left';
+	   ctx.textAlign ='left';
 
 		ctx.fillStyle = '#0f0';
 		ctx.fillRect( GAME.asset.posX, GAME.asset.posY, GAME.asset.w, GAME.asset.h );
 		
-		ctx.fillStyle='#fff';
-		var showPress = GAME.keys.lastPress + ' (' + GAME.keys.isPressing[ GAME.keys.lastPress ]+')';
-		ctx.fillText('Last Press: ' + showPress, 10, 20);
+		ctx.fillStyle ='#fff';
+		// var showPress = GAME.keys.lastPress+' (' +GAME.keys.isPressing[ GAME.keys.lastPress ]+')';
+		ctx.fillText('Score: ' + GAME.score, 10, ctx.height-10);
 	}
 };
-
-var resizeBuffer = function (){
-	GAME.canvas.width = 300;
-	GAME.canvas.height = 500;
-	GAME.ctx.width = GAME.canvas.width;
-	GAME.ctx.height = GAME.canvas.height;
-};
-
-var	requestAnimFrame =
-		window.requestAnimationFrame ||
-		window.webkitRequestAnimationFrame ||
-		window.mozRequestAnimationFrame ||
-		function(callback){ window.setTimeout(callback,17); };
 
 document.addEventListener('DOMContentLoaded', init, false);

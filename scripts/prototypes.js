@@ -31,5 +31,6 @@ var GAME = {
 			KEY_DOWN : 40,
 			KEY_ENTER: 13
 		}
-	}
+	},
+	score: 0
 };

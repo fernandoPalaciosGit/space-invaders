@@ -1,5 +1,9 @@
 body{
 	text-align: center;
+	background-color: #000;
+}
+h1{
+	color: #fff;
 }
 
 .invadersGame{
@@ -7,10 +11,11 @@ body{
 	text-align: center;
 }
 .invadersCanvas canvas{
-	width: 300px;
+	width: 350px;
 	height: 500px;
 	border: 5px solid red;
-	background-color: #999;
+	/*como seteamos pantall completa el canvas, los bordes salen fuera de viewport*/
+	box-sizing: border-box;
 }
 
 .showLayer{
