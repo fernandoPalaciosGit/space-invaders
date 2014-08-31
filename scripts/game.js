@@ -17,14 +17,15 @@ var reloadGame = function (){
 
 
 	GAME.paused = true;
-	GAME.gameover = false;
 	GAME.score = 0;
+	
+	GAME.player.health = 3;
+	GAME.player.damage = 0;
 	GAME.player.spaceShot.length = 0;
-	GAME.machine.invaders.length = 0;
 
-	/////////////////////////////////////////////////////////
+	// start whith onoe invader enemy
+	GAME.machine.invaders.length = 0;
 	GAME.machine.invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10) );
-	/////////////////////////////////////////////////////////
 };
 
 // indicar el estado de tecla presionada
@@ -51,15 +52,18 @@ var repaint = function (){
 };
 
 var moveAsset = function (){
-	// pausar movmiento
+	// STOP MOVEMENTS
 	if(	GAME.keys.lastPress === GAME.keys.allowed.KEY_ENTER &&
 			!GAME.keys.isPressing[ GAME.keys.allowed.KEY_ENTER ]	){
 		GAME.paused = !GAME.paused;
+		GAME.gameover = false;
 		GAME.keys.lastPress = null;
 	}
 
+	// MOVEMENTS NO PAUSED
 	if( !GAME.paused ){
 
+		// RELOAD FINISH WHEN NO HEALTH
 		if( GAME.gameover ){
 			reloadGame();
 
@@ -70,9 +74,9 @@ var moveAsset = function (){
 
 			// SPACESHIP HORIZONTAL MOVEMENT
 			if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
-				spaceShip.posX += spaceShip.w;
+				spaceShip.posX += (spaceShip.w/2);
 			} else if( GAME.keys.isPressing[ GAME.keys.allowed.KEY_LEFT ] ){
-				spaceShip.posX -= spaceShip.w;
+				spaceShip.posX -= (spaceShip.w/2);
 			}
 
 			// SPACESHIP LIMIT HORIZONTAL POSITION
@@ -106,13 +110,13 @@ var moveAsset = function (){
 			// MOVE ENEMIES
 			for (var j = 0, long = invaders.length; j < long; j++) {
 				
-				// SHOT ONTERSEVT ENEMIES
+				// SHOT INTERSECT ENEMIES
 				for (var k = 0, all = spaceShot.length; k < all; k++) {
 				    if( spaceShot[k].intersect(invaders[j]) ){
 				    	GAME.score++; // score increased by 1 point
 				    	invaders[j].posY = 0;// recycle enemy, new position 
 				    	invaders[j].posX = random(GAME.canvas.width/10)*10;
-				    	if( GAME.score % 5 === 0){ // hard level each 5 points
+				    	if( GAME.score % 3 === 0){ // hard level each 5 points
 				    		invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10) );
 				    	}
 
@@ -130,10 +134,25 @@ var moveAsset = function (){
 					invaders[j].posX = random(GAME.canvas.width/10)*10;
 				}
 
-				if( spaceShip.intersect(invaders[j]) ){ // spaceship intersect enemy
-					GAME.gameover = true;
+				if(	spaceShip.intersect(invaders[j]) && // spaceship intersect enemy
+						GAME.player.damage < 1 ){ // sometimes, many invaders are together and health is affected twice or more, damage variable allow us a time winodw
+					invaders[j].posY = 0;
+					invaders[j].posX = random(GAME.canvas.width/10)*10;
+					GAME.player.health--;
+					GAME.player.damage = 20; // inmunity of 20 loops
 				} 
 			}
+
+			// allow an immunity of 20 loops while the player is damaged
+			if( GAME.player.damage > 0 ){
+				GAME.player.damage--;
+			}
+
+			// FINNISH GAME
+			if( GAME.player.health < 1){
+				GAME.gameover = true;
+			}
+
 		}
 
 	}
@@ -145,14 +164,21 @@ var paintCanvas = function(ctx){
 	
 	if( GAME.paused ){
 	   ctx.textAlign = 'center';
-	   ctx.fillStyle ='#0f0';
-		ctx.fillText('PAUSE', GAME.canvas.width/2, GAME.canvas.height/2);
+	   if( !GAME.gameover ){
+	   	ctx.fillStyle ='#0f0';
+			ctx.fillText('PAUSE', GAME.canvas.width/2, GAME.canvas.height/2);
+	   }else{
+	   	ctx.fillStyle ='#f0f';
+	   	ctx.fillText('GAME OVER', GAME.canvas.width/2, GAME.canvas.height/2);
+	   }
 	}else{
 		var	spaceShip = GAME.player.spaceShip,
 				spaceShot = GAME.player.spaceShot,
 				invaders = GAME.machine.invaders;
 
-		spaceShip.fill(ctx, '#0f0')
+		// pintarlo de manera intermitente
+		if(GAME.player.damage % 2 === 0)
+			spaceShip.fill(ctx, '#0f0')
 
 		for( var i = 0, l = spaceShot.length; i <l ; i++ ){
 			spaceShot[i].fill(ctx, '#f00');
@@ -165,8 +191,9 @@ var paintCanvas = function(ctx){
 	   ctx.textAlign ='left';
 		ctx.fillStyle ='#fff';
 		// var showPress = GAME.keys.lastPress+' (' +GAME.keys.isPressing[ GAME.keys.lastPress ]+')';
-		ctx.fillText('Shots: '+spaceShot.length, ctx.width-45, ctx.height-5);
+		// ctx.fillText('Shots: '+spaceShot.length, ctx.width-45, ctx.height-5);
 		ctx.fillText('Score: ' + GAME.score, 5, ctx.height-5);
+		ctx.fillText('Health: '+ GAME.player.health, ctx.width-45, ctx.height-5);
 	}
 };
 

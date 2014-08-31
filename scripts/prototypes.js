@@ -36,6 +36,8 @@ var GAME = {
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
 	player: {
 		spaceShip: new Asset(0, 0, 10, 10),
+		health: 3,
+		damage: 0,
 		spaceShot: []
 	},
 	machine:{
