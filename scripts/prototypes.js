@@ -1,12 +1,12 @@
 ///////////////////////////
 // CONSTRUCTOR DE ASSETS //
 ///////////////////////////
-var Asset = function (x, y, w, h, hh, dd){
+var Asset = function (x, y, w, h, hh){
 	this.posX = x || 0;
 	this.posY = y || 0;
 	this.w  = w || 0;
 	this.h = h || this.w;
-	this.health = hh || 1;
+	this.health = hh || 3;
 	this.damage = 0;
 
 	this.setHealth = function(h){
@@ -45,9 +45,7 @@ var GAME = {
 	canvas: document.querySelector('.invadersCanvas canvas'),
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
 	player: {
-		spaceShip: new Asset(0, 0, 10, 10),
-		health: 3,
-		damage: 0,
+		spaceShip: new Asset(0, 0, 10, 10, 3),
 		spaceShot: []
 	},
 	machine:{

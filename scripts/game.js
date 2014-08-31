@@ -14,18 +14,18 @@ var reloadGame = function (){
 	var spaceShip = GAME.player.spaceShip;
 	spaceShip.posX = (GAME.canvas.width/2) - (spaceShip.w/2);
 	spaceShip.posY = GAME.canvas.height - 25;
+	spaceShip.setHealth(3);
+	spaceShip.setDamage(0);
 
 
 	GAME.paused = true;
 	GAME.score = 0;
 	
-	GAME.player.health = 3;
-	GAME.player.damage = 0;
 	GAME.player.spaceShot.length = 0;
 
-	// start whith onoe invader enemy
+	// start whith one invader enemy (2 points of health)
 	GAME.machine.invaders.length = 0;
-	GAME.machine.invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10) );
+	GAME.machine.invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
 };
 
 // indicar el estado de tecla presionada
@@ -117,7 +117,7 @@ var moveAsset = function (){
 				    	invaders[j].posY = 0;// recycle enemy, new position 
 				    	invaders[j].posX = random(GAME.canvas.width/10)*10;
 				    	if( GAME.score % 3 === 0){ // hard level each 5 points
-				    		invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10) );
+				    		invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
 				    	}
 
 				    	// destroy the intersected sohot
@@ -135,21 +135,21 @@ var moveAsset = function (){
 				}
 
 				if(	spaceShip.intersect(invaders[j]) && // spaceship intersect enemy
-						GAME.player.damage < 1 ){ // sometimes, many invaders are together and health is affected twice or more, damage variable allow us a time winodw
+						spaceShip.damage < 1 ){ // sometimes, many invaders are together and health is affected twice or more, damage variable allow us a time winodw
 					invaders[j].posY = 0;
 					invaders[j].posX = random(GAME.canvas.width/10)*10;
-					GAME.player.health--;
-					GAME.player.damage = 20; // inmunity of 20 loops
+					spaceShip.health--;
+					spaceShip.setDamage(20); // inmunity of 20 loops
 				} 
 			}
 
 			// allow an immunity of 20 loops while the player is damaged
-			if( GAME.player.damage > 0 ){
-				GAME.player.damage--;
+			if( spaceShip.damage > 0 ){
+				spaceShip.damage--;
 			}
 
 			// FINNISH GAME
-			if( GAME.player.health < 1){
+			if( spaceShip.health < 1){
 				GAME.gameover = true;
 			}
 
@@ -173,14 +173,14 @@ var paintCanvas = function(ctx){
 	   	ctx.fillText('GAME OVER', GAME.canvas.width/2, GAME.canvas.height/2);
 	   	ctx.fillText('press enter to reload game', GAME.canvas.width/2, (GAME.canvas.height/2)+20);
 	   }
-	   
+
 	}else{
 		var	spaceShip = GAME.player.spaceShip,
 				spaceShot = GAME.player.spaceShot,
 				invaders = GAME.machine.invaders;
 
 		// pintarlo de manera intermitente
-		if(GAME.player.damage % 2 === 0)
+		if( spaceShip.damage % 2 === 0 )
 			spaceShip.fill(ctx, '#0f0')
 
 		for( var i = 0, l = spaceShot.length; i <l ; i++ ){
@@ -196,7 +196,7 @@ var paintCanvas = function(ctx){
 		// var showPress = GAME.keys.lastPress+' (' +GAME.keys.isPressing[ GAME.keys.lastPress ]+')';
 		// ctx.fillText('Shots: '+spaceShot.length, ctx.width-45, ctx.height-5);
 		ctx.fillText('Score: ' + GAME.score, 5, ctx.height-5);
-		ctx.fillText('Health: '+ GAME.player.health, ctx.width-45, ctx.height-5);
+		ctx.fillText('Health: '+ spaceShip.health, ctx.width-50, ctx.height-5);
 	}
 };
 
