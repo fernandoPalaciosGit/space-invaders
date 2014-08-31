@@ -8,6 +8,11 @@ var Asset = function (x, y, w, h){
 	this.h = h || h;
 };
 
+Asset.prototype.fill = function(ctx, color){
+	ctx.fillStyle = color;
+	ctx.fillRect(this.posX, this.posY, this.w, this.h);
+};
+
 /////////////////////////
 // CONSTRUCTOR ESCENAS //
 /////////////////////////
@@ -35,7 +40,8 @@ var GAME = {
 			KEY_UP : 38,
 			KEY_RIGHT : 39,
 			KEY_DOWN : 40,
-			KEY_ENTER: 13
+			KEY_ENTER: 13,
+			KEY_SPACE: 32
 		}
 	},
 	score: 0
