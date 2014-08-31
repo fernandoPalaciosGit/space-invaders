@@ -1,11 +1,21 @@
 ///////////////////////////
 // CONSTRUCTOR DE ASSETS //
 ///////////////////////////
-var Asset = function (x, y, w, h){
+var Asset = function (x, y, w, h, hh, dd){
 	this.posX = x || 0;
 	this.posY = y || 0;
-	this.w  = w || w;
-	this.h = h || h;
+	this.w  = w || 0;
+	this.h = h || this.w;
+	this.health = hh || 1;
+	this.damage = 0;
+
+	this.setHealth = function(h){
+		this.health = h;
+	};
+
+	this.setDamage = function(d){
+		this.damage = d;
+	};
 };
 
 Asset.prototype.fill = function(ctx, color){

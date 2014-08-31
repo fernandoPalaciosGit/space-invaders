@@ -167,10 +167,13 @@ var paintCanvas = function(ctx){
 	   if( !GAME.gameover ){
 	   	ctx.fillStyle ='#0f0';
 			ctx.fillText('PAUSE', GAME.canvas.width/2, GAME.canvas.height/2);
+			ctx.fillText('press enter to play', GAME.canvas.width/2, (GAME.canvas.height/2)+20);
 	   }else{
 	   	ctx.fillStyle ='#f0f';
 	   	ctx.fillText('GAME OVER', GAME.canvas.width/2, GAME.canvas.height/2);
+	   	ctx.fillText('press enter to reload game', GAME.canvas.width/2, (GAME.canvas.height/2)+20);
 	   }
+	   
 	}else{
 		var	spaceShip = GAME.player.spaceShip,
 				spaceShot = GAME.player.spaceShot,
