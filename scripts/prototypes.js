@@ -35,6 +35,19 @@ Asset.prototype.intersect = function(asset){
 	}
 };
 
+// draw sprite Assets
+Asset.prototype.drawImageArea = function (ctx, sprite, cutPosX, cutPosY, cutWidth, cutHeight, color){
+	// check if the sprite image is loaded
+	if( !!sprite.width ){
+		ctx.drawImage(	sprite,
+					cutPosX, cutPosY, cutWidth, cutHeight,   //cut the sprite image
+					this.posX, this.posY,	//position the image inside the asset
+					this.w, this.h );	//size the cut image in the canvas
+	} else {
+		this.fill(ctx, color);
+	}
+};
+
 // aditional properties only for player spaceship
 Asset.prototype.multishot = null;
 
