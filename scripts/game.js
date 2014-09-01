@@ -11,7 +11,8 @@ var init = function (evLoad){
 
 // reset game variables
 var reloadGame = function (){
-	var spaceShip = GAME.player.spaceShip;
+	var	spaceShip = GAME.player.spaceShip,
+			invaders = GAME.machine.invaders;
 	spaceShip.posX = (GAME.canvas.width/2) - (spaceShip.w/2);
 	spaceShip.posY = GAME.canvas.height - 25;
 	spaceShip.setHealth(3);
@@ -24,8 +25,8 @@ var reloadGame = function (){
 	GAME.player.spaceShot.length = 0;
 
 	// start whith one invader enemy (2 points of health)
-	GAME.machine.invaders.length = 0;
-	GAME.machine.invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
+	invaders.length = 0;
+	invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
 };
 
 // indicar el estado de tecla presionada
@@ -75,15 +76,14 @@ var moveAsset = function (){
 			// SPACESHIP HORIZONTAL MOVEMENT
 			if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
 				spaceShip.posX += (spaceShip.w/2);
-			} else if( GAME.keys.isPressing[ GAME.keys.allowed.KEY_LEFT ] ){
+			} else if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_LEFT ] ){
 				spaceShip.posX -= (spaceShip.w/2);
 			}
 
 			// SPACESHIP LIMIT HORIZONTAL POSITION
-			if( spaceShip.posX > (GAME.canvas.width - spaceShip.w) ){
+			if( (spaceShip.posX + spaceShip.w) > GAME.canvas.width ){
 				spaceShip.posX = GAME.canvas.width - spaceShip.w;
-			}
-			if(spaceShip.posX < 0) {
+			} else if (spaceShip.posX < 0){
 				spaceShip.posX = 0;
 			}
 
@@ -112,17 +112,25 @@ var moveAsset = function (){
 				
 				// SHOT INTERSECT ENEMIES
 				for (var k = 0, all = spaceShot.length; k < all; k++) {
-				    if( spaceShot[k].intersect(invaders[j]) ){
+				    if(	spaceShot[k].intersect(invaders[j]) &&
+				    		invaders[j].damage < 1 ){
 
+				    	// damage to invader
 					   invaders[j].health--;
+					   invaders[j].setDamage(10);
+				    	
+				    	// destroy the intersected shot
+				    	spaceShot.splice( k--, 1 );
+				    	all--;
 					   
+					   // check if invader damage is enought to destroy
 					   if( invaders[j].health < 1 ){
+				    		GAME.score++; // score increased for each invader destroyed
+					    	
 					    	// recycle enemy, new position 
 					    	invaders[j].posY = 0;
 					    	invaders[j].posX = random(GAME.canvas.width/10)*10;
 					   	invaders[j].setHealth(2);
-
-				    		GAME.score++; // score increased
 				    		
 				    		// increase level each 3 points (add one invader)
 					    	if( GAME.score % 3 === 0){
@@ -130,10 +138,12 @@ var moveAsset = function (){
 					    	}
 					   }
 
-				    	// destroy the intersected shot
-				    	spaceShot.splice( k--, 1 );
-				    	all--;
 				    }
+				}
+
+
+				if ( invaders[j].damage > 0 ) {
+					invaders[j].damage--;
 				}
 
 				// NEW ENEMY POSITION
@@ -152,6 +162,7 @@ var moveAsset = function (){
 					spaceShip.setDamage(20); // inmunity of 20 loops
 				} 
 			}
+
 
 			// allow an immunity of 20 loops while the player is damaged
 			if( spaceShip.damage > 0 ){
@@ -190,15 +201,23 @@ var paintCanvas = function(ctx){
 				invaders = GAME.machine.invaders;
 
 		// pintarlo de manera intermitente
-		if( spaceShip.damage % 2 === 0 )
+		if( spaceShip.damage % 2 === 0 ){
 			spaceShip.fill(ctx, '#0f0')
+		} else { // damaged
+			spaceShip.fill(ctx, '#f00');
+		}
 
 		for( var i = 0, l = spaceShot.length; i <l ; i++ ){
 			spaceShot[i].fill(ctx, '#f00');
 		}
 
 		for( var j = 0, l = invaders.length; j <l ; j++ ){
-			invaders[j].fill(ctx, '#f0f');
+			if( invaders[j].damage % 2 === 0 ){
+				invaders[j].fill(ctx, '#f0f');
+			} else { // damaged
+				invaders[j].fill(ctx, '#f00');
+			}
+
 		}
 
 	   ctx.textAlign ='left';
