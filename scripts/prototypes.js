@@ -18,6 +18,7 @@ var Asset = function (x, y, w, h, hh){
 	};
 };
 
+// additional player and machine properties
 Asset.prototype.fill = function(ctx, color){
 	ctx.fillStyle = color;
 	ctx.fillRect(this.posX, this.posY, this.w, this.h);
@@ -33,6 +34,9 @@ Asset.prototype.intersect = function(asset){
 	}
 };
 
+// aditional properties only for player spaceship
+Asset.prototype.multishot;
+
 /////////////////////////
 // CONSTRUCTOR ESCENAS //
 /////////////////////////
@@ -44,10 +48,17 @@ Asset.prototype.intersect = function(asset){
 var GAME = {
 	canvas: document.querySelector('.invadersCanvas canvas'),
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
+	//Assets for improvemnet
+	powerups: {
+		multishots: [], 
+		extraPoint: []
+	},
+	// Asset for the gamer
 	player: {
 		spaceShip: new Asset(0, 0, 10, 10, 3),
 		spaceShot: []
 	},
+	// Assets for enemies
 	machine:{
 		invaders: []
 	},

@@ -15,8 +15,10 @@ var reloadGame = function (){
 			invaders = GAME.machine.invaders;
 	spaceShip.posX = (GAME.canvas.width/2) - (spaceShip.w/2);
 	spaceShip.posY = GAME.canvas.height - 25;
+
 	spaceShip.setHealth(3);
 	spaceShip.setDamage(0);
+	spaceShip.multishot = 1;
 
 
 	GAME.paused = true;
@@ -125,12 +127,46 @@ var moveAsset = function (){
 					   
 					   // check if invader damage is enought to destroy
 					   if( invaders[j].health < 1 ){
-				    		GAME.score++; // score increased for each invader destroyed
+				    		// score increased for each invader destroyed
+				    		GAME.score++;
 					    	
-					    	// recycle enemy, new position 
-					    	invaders[j].posY = 0;
-					    	invaders[j].posX = random(GAME.canvas.width/10)*10;
-					   	invaders[j].setHealth(2);
+
+							/* When destroy an invader decide random Benefit (Impronement).
+							10 for out of 20, nothing happens.
+							of the remaning (8), 4 will be extra Score
+							and only 2 will be multi-shoot*/
+
+							var benefit = random(20); //[0, 20]
+							if ( benefit < 10 ) {
+								// recicle position and Dimensions of enemy destroyed
+								if( benefit < 3 ){ // create multishot Asset
+									GAME.powerups.multishots.push(
+										new Asset(	invaders[j].posX, invaders[j].posY,
+														invaders[j].w, invaders[j].h, 1) );
+									console.log('multishots', GAME.powerups.multishots);
+								} else { // create extra score Asset, and reduce one invader
+									GAME.powerups.extraPoint.push(
+										new Asset(	invaders[j].posX, invaders[j].posY,
+														invaders[j].w, invaders[j].h, 1) );
+									console.log('extraPoint', GAME.powerups.extraPoint);
+								}
+							} else {
+								console.log(benefit + ' >= 10 : NO benefit');
+							}
+
+							// new position of enemy destroyed 
+							invaders[j].posY = 0;
+							invaders[j].posX = random(GAME.canvas.width/10)*10;
+							invaders[j].setHealth(2);
+
+							// SPACESHIP INTERSECT MULTISHOT
+							// increment one shot, check 3 multishots is the maximun
+							// rest one multishot if  the spaceship has been reduce one health point
+
+							// SPACESHIP INTERSECT EXTRASCORE
+							// increase 2 point the score and reduce one invader
+							// (preveer NO eliminar todos los invaders)
+
 				    		
 				    		// increase level each 3 points (add one invader)
 					    	if( GAME.score % 3 === 0){
