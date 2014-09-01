@@ -3,6 +3,12 @@ var init = function (evLoad){
 	document.addEventListener('keyup', offKeyPressed, false);
 	window.addEventListener('resize', setCanvasFullScreen, false);
 
+	GAME.sprite.onerror = function(event){
+		this.src = 'http://www.pcengine.co.uk/sunteam/pics_unfinished/HSS_sprite.png';
+		this.onerror = ""; // no more errors; ensure that the server is not fallen
+	};
+   GAME.sprite.src = 'assets/spritesheet.png';
+
 	reloadGame();
 	setCanvasFullScreen();
 	run();

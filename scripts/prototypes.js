@@ -24,6 +24,7 @@ Asset.prototype.fill = function(ctx, color){
 	ctx.fillRect(this.posX, this.posY, this.w, this.h);
 };
 
+// Assets collisions
 Asset.prototype.intersect = function(asset){
 	// this.constructor.prototype.isPrototypeOf(asset)
 	if( asset instanceof this.constructor ){
@@ -35,7 +36,7 @@ Asset.prototype.intersect = function(asset){
 };
 
 // aditional properties only for player spaceship
-Asset.prototype.multishot;
+Asset.prototype.multishot = null;
 
 /////////////////////////
 // CONSTRUCTOR MENSAGES //
@@ -67,6 +68,7 @@ var GAME = {
 	machine:{
 		invaders: []
 	},
+	sprite: new Image(),
 	keys: {
 		lastPress: null,
 		isPressing : [],
