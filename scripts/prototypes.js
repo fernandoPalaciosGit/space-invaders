@@ -38,9 +38,13 @@ Asset.prototype.intersect = function(asset){
 Asset.prototype.multishot;
 
 /////////////////////////
-// CONSTRUCTOR ESCENAS //
+// CONSTRUCTOR MENSAGES //
 /////////////////////////
-
+var Message = function (str, x, y){
+	this.msg = str || '?';
+	this.posX = x || 0;
+	this.posY = y || 0;
+};
 
 ////////////////////////
 // VARIABLES GLOBALES //
@@ -50,8 +54,9 @@ var GAME = {
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
 	//Assets for improvemnet
 	powerups: {
-		multiShots: [], 
-		extraPoints: []
+		multiShots: [],
+		extraPoints: [],
+		messages: []
 	},
 	// Asset for the gamer
 	player: {

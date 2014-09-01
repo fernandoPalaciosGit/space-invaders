@@ -20,11 +20,14 @@ var reloadGame = function (){
 	spaceShip.setDamage(0);
 	spaceShip.multishot = 1;
 
-
 	GAME.paused = true;
 	GAME.score = 0;
 	
+	// start with no shots or powerups or messages
+	GAME.powerups.multiShots.length = 0;
+	GAME.powerups.extraPoints.length = 0;
 	GAME.player.spaceShot.length = 0;
+	GAME.powerups.messages.length = 0;
 
 	// start whith one invader enemy (2 points of health)
 	invaders.length = 0;
@@ -74,8 +77,9 @@ var moveAsset = function (){
 			var	spaceShip = GAME.player.spaceShip,
 					spaceShot = GAME.player.spaceShot,
 					invaders = GAME.machine.invaders,
-					extraPoints = GAME.powerups.extraPoints;
-					multiShots = GAME.powerups.multiShots;
+					extraPoints = GAME.powerups.extraPoints,
+					multiShots = GAME.powerups.multiShots,
+					messages = GAME.powerups.messages;
 
 			// SPACESHIP HORIZONTAL MOVEMENT
 			if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
@@ -112,11 +116,20 @@ var moveAsset = function (){
 
 			// MOVE SOOTS
 			for (var i = 0, len = spaceShot.length; i < len; i++) {
-			    spaceShot[i].posY -= spaceShot[i].h;
-			    if( spaceShot[i].posY < 0 ){
-			    	spaceShot.splice( i--, 1);
-			    	len--;
-			    }
+				spaceShot[i].posY -= spaceShot[i].h;
+				if( spaceShot[i].posY < 0 ){
+					spaceShot.splice( i--, 1);
+					len--;
+				}
+			}
+
+			// MOVE MESSAGES
+			for (var i = 0, len = messages.length; i < len; i++) {
+				messages[i].posY -= 1;
+				if( messages[i].posY < GAME.canvas.height-50 ){
+					messages.splice(--i, 1);
+					len--;
+				}
 			}
 
 			// MOVE ENEMIES
@@ -124,22 +137,23 @@ var moveAsset = function (){
 				
 				// SHOT INTERSECT ENEMIES
 				for (var k = 0, all = spaceShot.length; k < all; k++) {
-				    if(	spaceShot[k].intersect(invaders[j]) &&
-				    		invaders[j].damage < 1 ){
+					if(	spaceShot[k].intersect(invaders[j]) &&
+						invaders[j].damage < 1 ){
 
-				    	// damage to invader
-					   invaders[j].health--;
-					   invaders[j].setDamage(10);
-				    	
-				    	// destroy the intersected shot
-				    	spaceShot.splice( k--, 1 );
-				    	all--;
-					   
-					   // check if invader damage is enought to destroy
-					   if( invaders[j].health < 1 ){
-				    		// score increased for each invader destroyed
-				    		GAME.score++;
-					    	
+						// damage to invader
+						invaders[j].health--;
+						invaders[j].setDamage(10);
+
+						// destroy the intersected shot
+						spaceShot.splice( k--, 1 );
+						all--;
+
+						// check if invader damage is enought to destroy
+						if( invaders[j].health < 1 ){
+							// score increased for each invader destroyed
+							GAME.score++;
+							messages.push( new Message('+1', spaceShip.posX, spaceShip.posY) );
+
 
 							/* When destroy an invader decide random Benefit (Impronement).
 							10 for out of 20, nothing happens.
@@ -153,29 +167,30 @@ var moveAsset = function (){
 									GAME.powerups.multiShots.push(
 										new Asset(	invaders[j].posX, invaders[j].posY,
 														invaders[j].w, invaders[j].h, 1) );
-									console.log('multishots', GAME.powerups.multiShots);
+
 								} else { // create extra score Asset, and reduce one invader
 									GAME.powerups.extraPoints.push(
 										new Asset(	invaders[j].posX, invaders[j].posY,
 														invaders[j].w, invaders[j].h, 1) );
-									console.log('extraPoint', GAME.powerups.extraPoints);
 								}
+
 							} else {
-								console.log(benefit + ' >= 10 : NO benefit');
+								// NO BENEFIT ELSE
+								// console.log(benefit + ' >= 10 : NO benefit');
 							}
 
 							// new position of enemy destroyed 
 							invaders[j].posY = 0;
 							invaders[j].posX = random(GAME.canvas.width/10)*10;
 							invaders[j].setHealth(2);
-				    		
-				    		// increase level each 3 points (add one invader)
-					    	if( GAME.score % 3 === 0){
-					    		invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
-					    	}
-					   }
 
-				    }
+							// increase level each 3 points (add one invader)
+							if( GAME.score % 3 === 0){
+								invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
+							}
+						}
+
+					}
 				}
 
 
@@ -202,13 +217,13 @@ var moveAsset = function (){
 					if( spaceShip.multishot > 1 ){
 						spaceShip.multishot--;
 					}
-				} 
+				}
 			}
 
 			// EXTRASCORE POWERUPS
 			for (var i = 0, len = extraPoints.length; i < len; i++) {
-			    //slower vertical movement
-			    extraPoints[i].posY += (extraPoints[i].h/4);
+				//slower vertical movement
+				extraPoints[i].posY += (extraPoints[i].h/4);
 				
 				// SPACESHIP OR CANVAS INTERSECT WITH EXTRASCORE
 				if(	spaceShip.intersect(extraPoints[i]) || // player intersect
@@ -217,6 +232,7 @@ var moveAsset = function (){
 					// increase 5 point the score
 					if( spaceShip.intersect(extraPoints[i]) ){
 						GAME.score += 5;
+						messages.push( new Message('+5', spaceShip.posX, spaceShip.posY) );
 					}
 					
 					extraPoints.splice(i--, 1);
@@ -227,8 +243,8 @@ var moveAsset = function (){
 
 			// MULTISHOT POWERUPS
 			for (var j = 0, long = multiShots.length; j < long; j++) {
-			    //slower vertical movement
-			    multiShots[j].posY += (multiShots[j].h/4);
+				//slower vertical movement
+				multiShots[j].posY += (multiShots[j].h/4);
 				
 				// SPACESHIP OR CANVAS INTERSECT WITH MULTISHOT
 				if(	spaceShip.intersect(multiShots[j]) || // player intersect
@@ -238,8 +254,10 @@ var moveAsset = function (){
 					if( spaceShip.intersect(multiShots[j]) ){
 						if( spaceShip.multishot < 3){
 							spaceShip.multishot++;
+							messages.push( new Message('MULTI', spaceShip.posX, spaceShip.posY) );
 						} else {
 							GAME.score += 3;
+							messages.push( new Message('+3', spaceShip.posX, spaceShip.posY) );
 						}
 					}
 					
@@ -247,7 +265,7 @@ var moveAsset = function (){
 					long--;
 				}
 
-			};
+			}
 
 			// allow an immunity of 20 loops while the player is damaged
 			if( spaceShip.damage > 0 ){
@@ -265,31 +283,33 @@ var moveAsset = function (){
 };
 
 var paintCanvas = function(ctx){
- 	ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+	ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
 	ctx.fillRect(0, 0, GAME.canvas.width, GAME.canvas.height);
 	
 	if( GAME.paused ){
-	   ctx.textAlign = 'center';
-	   if( !GAME.gameover ){
-	   	ctx.fillStyle ='#0f0';
+		ctx.textAlign = 'center';
+		if( !GAME.gameover ){
+			ctx.fillStyle ='#0f0';
 			ctx.fillText('PAUSE', GAME.canvas.width/2, GAME.canvas.height/2);
 			ctx.fillText('press enter to play', GAME.canvas.width/2, (GAME.canvas.height/2)+20);
-	   }else{
-	   	ctx.fillStyle ='#f0f';
-	   	ctx.fillText('GAME OVER', GAME.canvas.width/2, GAME.canvas.height/2);
-	   	ctx.fillText('press enter to reload game', GAME.canvas.width/2, (GAME.canvas.height/2)+20);
-	   }
+		}else{
+			ctx.fillStyle ='#f0f';
+			ctx.fillText(	'GAME OVER', GAME.canvas.width/2, GAME.canvas.height/2);
+			ctx.fillText(	'press enter to reload game',
+								GAME.canvas.width/2, (GAME.canvas.height/2)+20);
+		}
 
 	}else{
 		var	spaceShip = GAME.player.spaceShip,
 				spaceShot = GAME.player.spaceShot,
 				invaders = GAME.machine.invaders,
-				extraPoints = GAME.powerups.extraPoints;
-				multiShots = GAME.powerups.multiShots;
+				extraPoints = GAME.powerups.extraPoints,
+				multiShots = GAME.powerups.multiShots,
+				messages = GAME.powerups.messages;
 
 		// spaceShip flashing green/red render
 		if( spaceShip.damage % 2 === 0 ){
-			spaceShip.fill(ctx, '#0f0')
+			spaceShip.fill(ctx, '#0f0');
 		} else { // damaged
 			spaceShip.fill(ctx, '#f00');
 		}
@@ -316,13 +336,18 @@ var paintCanvas = function(ctx){
 			} else { // damaged
 				invaders[j].fill(ctx, '#f00');
 			}
-
 		}
 
-	   ctx.textAlign ='left';
+		// messages game benefits
+		for (var j = 0, len = messages.length; j < len; j++) {
+			ctx.fillStyle ='#fff';
+			ctx.fillText( messages[j].msg, messages[j].posX, messages[j].posY);
+		}
+		
+
 		ctx.fillStyle ='#fff';
 		// var showPress = GAME.keys.lastPress+' (' +GAME.keys.isPressing[ GAME.keys.lastPress ]+')';
-		// ctx.fillText('Shots: '+spaceShot.length, ctx.width-45, ctx.height-5);
+		// ctx.fillText('Pressing: '+showPress, ctx.width-45, ctx.height-5);
 		ctx.fillText('Score: ' + GAME.score, 5, ctx.height-5);
 		ctx.fillText('Health: '+ spaceShip.health, ctx.width-50, ctx.height-5);
 	}
