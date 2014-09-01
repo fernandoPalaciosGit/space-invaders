@@ -50,8 +50,8 @@ var GAME = {
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
 	//Assets for improvemnet
 	powerups: {
-		multishots: [], 
-		extraPoint: []
+		multiShots: [], 
+		extraPoints: []
 	},
 	// Asset for the gamer
 	player: {

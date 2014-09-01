@@ -140,15 +140,15 @@ var moveAsset = function (){
 							if ( benefit < 10 ) {
 								// recicle position and Dimensions of enemy destroyed
 								if( benefit < 3 ){ // create multishot Asset
-									GAME.powerups.multishots.push(
+									GAME.powerups.multiShots.push(
 										new Asset(	invaders[j].posX, invaders[j].posY,
 														invaders[j].w, invaders[j].h, 1) );
-									console.log('multishots', GAME.powerups.multishots);
+									console.log('multishots', GAME.powerups.multiShots);
 								} else { // create extra score Asset, and reduce one invader
-									GAME.powerups.extraPoint.push(
+									GAME.powerups.extraPoints.push(
 										new Asset(	invaders[j].posX, invaders[j].posY,
 														invaders[j].w, invaders[j].h, 1) );
-									console.log('extraPoint', GAME.powerups.extraPoint);
+									console.log('extraPoint', GAME.powerups.extraPoints);
 								}
 							} else {
 								console.log(benefit + ' >= 10 : NO benefit');
@@ -234,19 +234,33 @@ var paintCanvas = function(ctx){
 	}else{
 		var	spaceShip = GAME.player.spaceShip,
 				spaceShot = GAME.player.spaceShot,
-				invaders = GAME.machine.invaders;
+				invaders = GAME.machine.invaders,
+				extraPoints = GAME.powerups.extraPoints;
+				multiShots = GAME.powerups.multiShots;
 
-		// pintarlo de manera intermitente
+		// spaceShip flashing green/red render
 		if( spaceShip.damage % 2 === 0 ){
 			spaceShip.fill(ctx, '#0f0')
 		} else { // damaged
 			spaceShip.fill(ctx, '#f00');
 		}
 
+		// spaceShot red render
 		for( var i = 0, l = spaceShot.length; i <l ; i++ ){
 			spaceShot[i].fill(ctx, '#f00');
 		}
 
+		// extraPoint orange render
+		for( var i = 0, l = extraPoints.length; i <l ; i++ ){
+			extraPoints[i].fill(ctx, '#f90');
+		}
+
+		// multishots yellow render
+		for( var i = 0, l = multiShots.length; i <l ; i++ ){
+			multiShots[i].fill(ctx, '#cc6');
+		}
+
+		// invaders flashing purple/red render
 		for( var j = 0, l = invaders.length; j <l ; j++ ){
 			if( invaders[j].damage % 2 === 0 ){
 				invaders[j].fill(ctx, '#f0f');
