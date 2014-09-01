@@ -93,12 +93,20 @@ var moveAsset = function (){
 
 			// SHOOTS (in front of spaceship)
 			if (	GAME.keys.lastPress === GAME.keys.allowed.KEY_SPACE) {
-				var shotDim = 5;
-				spaceShot.push(
-					new Asset(
-						spaceShip.posX + (spaceShip.w/2) - (shotDim/2),
-						spaceShip.posY,
-						shotDim, shotDim) );
+				var	shotDim = 5,
+						shotPosX = spaceShip.posX + (spaceShip.w/2) - (shotDim/2),
+						shotPosY = spaceShip.posY,
+						multi = spaceShip.multishot,
+						way = 1;
+
+				// implement multishot
+				while( multi ){
+					spaceShot.push( new Asset( shotPosX, shotPosY, shotDim, shotDim) );
+					shotPosX = shotPosX + ( shotDim  * way);
+					way = -1 * (way * 2);
+					multi--;
+				}
+				
 				GAME.keys.lastPress = null;
 			}
 
