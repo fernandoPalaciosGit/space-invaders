@@ -205,6 +205,11 @@ var moveAsset = function (){
 				// SPACESHIP OR CANVAS INTERSECT WITH EXTRASCORE
 				if(	spaceShip.intersect(extraPoints[i]) || // player intersect
 						extraPoints[i].posY > GAME.canvas.height ){ //vertical limit
+
+					// increase 5 point the score
+					if( spaceShip.intersect(extraPoints[i]) ){
+						GAME.score += 5;
+					}
 					
 					extraPoints.splice(i--, 1);
 					len--;
@@ -217,9 +222,18 @@ var moveAsset = function (){
 			    //slower vertical movement
 			    multiShots[j].posY += (multiShots[j].h/4);
 				
-				// SPACESHIP OR CANVAS INETRSECT WITH MULTISHOT
+				// SPACESHIP OR CANVAS INTERSECT WITH MULTISHOT
 				if(	spaceShip.intersect(multiShots[j]) || // player intersect
 						multiShots[j].posY > GAME.canvas.height ){ //vertical limit
+
+					// increment one player shot, maximun 3 shots, rather than increment score
+					if( spaceShip.intersect(multiShots[j]) ){
+						if( spaceShip.multishot < 3){
+							spaceShip.multishot++;
+						} else {
+							GAME.score += 3;
+						}
+					}
 					
 					multiShots.splice(j--, 1);
 					long--;
