@@ -189,24 +189,42 @@ var moveAsset = function (){
 					invaders[j].posX = random(GAME.canvas.width/10)*10;
 					spaceShip.health--;
 					spaceShip.setDamage(20); // inmunity of 20 loops
+
+					// rest one multishot if  the spaceship has been reduce one health point
+					if( spaceShip.multishot > 1 ){
+						spaceShip.multishot--;
+					}
 				} 
 			}
 
-			// MOVE POWER UPS
+			// EXTRASCORE POWERUPS
 			for (var i = 0, len = extraPoints.length; i < len; i++) {
+			    //slower vertical movement
 			    extraPoints[i].posY += (extraPoints[i].h/4);
+				
+				// SPACESHIP OR CANVAS INTERSECT WITH EXTRASCORE
+				if(	spaceShip.intersect(extraPoints[i]) || // player intersect
+						extraPoints[i].posY > GAME.canvas.height ){ //vertical limit
+					
+					extraPoints.splice(i--, 1);
+					len--;
+				}
 
-				// SPACESHIP INTERSECT EXTRASCORE
-				// increase 2 point the score and reduce one invader
-				// (provide NO remove all invaders)
-			};
+			}
 
-			for (var i = 0, len = multiShots.length; i < len; i++) {
-			    multiShots[i].posY += (multiShots[i].h/4);
+			// MULTISHOT POWERUPS
+			for (var j = 0, long = multiShots.length; j < long; j++) {
+			    //slower vertical movement
+			    multiShots[j].posY += (multiShots[j].h/4);
+				
+				// SPACESHIP OR CANVAS INETRSECT WITH MULTISHOT
+				if(	spaceShip.intersect(multiShots[j]) || // player intersect
+						multiShots[j].posY > GAME.canvas.height ){ //vertical limit
+					
+					multiShots.splice(j--, 1);
+					long--;
+				}
 
-			    // SPACESHIP INTERSECT MULTISHOT
-				// increment one shot, check 3 multishots is the maximun
-				// rest one multishot if  the spaceship has been reduce one health point
 			};
 
 			// allow an immunity of 20 loops while the player is damaged
