@@ -70,7 +70,8 @@ var GAME = {
 	powerups: {
 		multiShots: [],
 		extraPoints: [],
-		messages: []
+		messages: [],
+		extraHealth: []
 	},
 	// Asset for the gamer
 	player: {

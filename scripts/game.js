@@ -1,3 +1,11 @@
+(function(	spaceShip,
+				spaceShot,
+				invaders,
+				extraPoints,
+				multiShots,
+				messages,
+				extraHealth	){
+
 var init = function (evLoad){
 	document.addEventListener('keydown', onKeyPressed, false);
 	document.addEventListener('keyup', offKeyPressed, false);
@@ -17,8 +25,6 @@ var init = function (evLoad){
 
 // reset game variables
 var reloadGame = function (){
-	var	spaceShip = GAME.player.spaceShip,
-			invaders = GAME.machine.invaders;
 	spaceShip.posX = (GAME.canvas.width/2) - (spaceShip.w/2);
 	spaceShip.posY = GAME.canvas.height - spaceShip.h - 15;
 
@@ -31,10 +37,11 @@ var reloadGame = function (){
 	GAME.animTimerSprite = 0;
 	
 	// start with no shots or powerups or messages
-	GAME.powerups.multiShots.length = 0;
-	GAME.powerups.extraPoints.length = 0;
-	GAME.player.spaceShot.length = 0;
-	GAME.powerups.messages.length = 0;
+	multiShots.length  = 0;
+	extraPoints.length = 0;
+	extraHealth.length = 0;
+	spaceShot.length   = 0;
+	messages.length    = 0;
 
 	// start whith three invaders enemys (2 points of health)
 	invaders.length = 0;
@@ -83,12 +90,6 @@ var moveAsset = function (){
 			reloadGame();
 
 		} else {
-			var	spaceShip = GAME.player.spaceShip,
-					spaceShot = GAME.player.spaceShot,
-					invaders = GAME.machine.invaders,
-					extraPoints = GAME.powerups.extraPoints,
-					multiShots = GAME.powerups.multiShots,
-					messages = GAME.powerups.messages;
 
 			// SPACESHIP HORIZONTAL MOVEMENT
 			if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
@@ -173,12 +174,12 @@ var moveAsset = function (){
 							if ( benefit < 10 ) {
 								// recicle position and Dimensions of enemy destroyed
 								if( benefit < 3 ){ // create multishot Asset
-									GAME.powerups.multiShots.push(
+									multiShots.push(
 										new Asset(	invaders[j].posX, invaders[j].posY,
 														invaders[j].w, invaders[j].h, 1) );
 
 								} else { // create extra score Asset, and reduce one invader
-									GAME.powerups.extraPoints.push(
+									extraPoints.push(
 										new Asset(	invaders[j].posX, invaders[j].posY,
 														invaders[j].w, invaders[j].h, 1) );
 								}
@@ -316,12 +317,6 @@ var paintCanvas = function(ctx){
 		}
 
 	}else{
-		var	spaceShip = GAME.player.spaceShip,
-				spaceShot = GAME.player.spaceShot,
-				invaders = GAME.machine.invaders,
-				extraPoints = GAME.powerups.extraPoints,
-				multiShots = GAME.powerups.multiShots,
-				messages = GAME.powerups.messages;
 
 		// spaceShip flashing sprite render
 		if( spaceShip.damage % 2 === 0 ){
@@ -345,9 +340,9 @@ var paintCanvas = function(ctx){
 		}
 
 		// extra health sprite render
-		/*for( var i = 0, l = extraHealth.length; i < l ; i++ ){
+		for( var i = 0, l = extraHealth.length; i < l ; i++ ){
 			extraHealth[i].drawImageArea(ctx, GAME.sprite, 140, 318, 60, 60, '#0f0');
-		}*/
+		}
 
 		// invaders flashing sprite render
 		for( var j = 0, l = invaders.length; j <l ; j++ ){
@@ -374,3 +369,11 @@ var paintCanvas = function(ctx){
 };
 
 document.addEventListener('DOMContentLoaded', init, false);
+
+}( GAME.player.spaceShip,
+	GAME.player.spaceShot,
+	GAME.machine.invaders,
+	GAME.powerups.extraPoints,
+	GAME.powerups.multiShots,
+	GAME.powerups.messages,
+	GAME.powerups.extraHealth	));
