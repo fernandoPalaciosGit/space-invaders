@@ -76,7 +76,9 @@ var Bgd = function (x, y, w, h, tf){
 		if( this.timerFlash > 120 ){
 			this.timerFlash -= 120;
 		}
-		var c = (255 - this.timerFlash);
+
+		// when we arrived at the end of flashing subtract half to avoid the abrupt change
+		var c = 255 - Math.abs( 120 - this.timerFlash);
       ctx.fillStyle = 'rgb('+c+','+c+','+c+')';
       ctx.fillRect( this.posX, this.posY, this.w, this.h );
 	}

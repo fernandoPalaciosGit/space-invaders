@@ -356,7 +356,7 @@ var paintCanvas = function(ctx, ctxBgd){
 		}
 
 	}else{
-		ctxBgd.fillStyle = 'rgba(0, 0, 0, 0.2)'; // transparent backgrounds
+		ctxBgd.fillStyle = 'rgba(0, 0, 0, 0.3)'; // transparent backgrounds
 		ctxBgd.fillRect(0, 0, GAME.canvasBgd.width, GAME.canvasBgd.height);
 
 		// spaceShip flashing sprite render
