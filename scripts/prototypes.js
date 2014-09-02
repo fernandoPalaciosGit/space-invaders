@@ -74,7 +74,7 @@ var GAME = {
 	},
 	// Asset for the gamer
 	player: {
-		spaceShip: new Asset(0, 0, 10, 10, 3),
+		spaceShip: new Asset(0, 0, 20, 20, 3),
 		spaceShot: []
 	},
 	// Assets for enemies

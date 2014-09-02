@@ -4,10 +4,10 @@ var init = function (evLoad){
 	window.addEventListener('resize', setCanvasFullScreen, false);
 
 	GAME.sprite.onerror = function(event){
-		this.src = 'http://www.pcengine.co.uk/sunteam/pics_unfinished/HSS_sprite.png';
+		this.src = 'http://www.pcengine.co.uk/sunteam/pics_unfinished/HSS_sprites.png';
 		this.onerror = ""; // no more errors; ensure that the server is not fallen
 	};
-   GAME.sprite.src = 'assets/spritesheet.png';
+   GAME.sprite.src = 'assets/gameSprite.png';
 
 	reloadGame();
 	setCanvasFullScreen();
@@ -20,9 +20,9 @@ var reloadGame = function (){
 	var	spaceShip = GAME.player.spaceShip,
 			invaders = GAME.machine.invaders;
 	spaceShip.posX = (GAME.canvas.width/2) - (spaceShip.w/2);
-	spaceShip.posY = GAME.canvas.height - 25;
+	spaceShip.posY = GAME.canvas.height - spaceShip.h - 15;
 
-	spaceShip.setHealth(3);
+	spaceShip.setHealth(5);
 	spaceShip.setDamage(0);
 	spaceShip.multishot = 1;
 
@@ -37,7 +37,7 @@ var reloadGame = function (){
 
 	// start whith one invader enemy (2 points of health)
 	invaders.length = 0;
-	invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
+	invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 15, 15, 2) );
 };
 
 // indicar el estado de tecla presionada
@@ -192,7 +192,7 @@ var moveAsset = function (){
 
 							// increase level each 3 points (add one invader)
 							if( GAME.score % 3 === 0){
-								invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 10, 10, 2) );
+								invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 15, 15, 2) );
 							}
 						}
 
@@ -205,7 +205,7 @@ var moveAsset = function (){
 				}
 
 				// NEW ENEMY POSITION
-				invaders[j].posY += (invaders[j].h/2); //half velocity movement
+				invaders[j].posY += (invaders[j].h/3); //half velocity movement
 
 				if( invaders[j].posY > GAME.canvas.height ){ // enemy limit movement
 					invaders[j].posY = 0;
@@ -313,34 +313,39 @@ var paintCanvas = function(ctx){
 				multiShots = GAME.powerups.multiShots,
 				messages = GAME.powerups.messages;
 
-		// spaceShip flashing green/red render
+		// spaceShip flashing sprite render
 		if( spaceShip.damage % 2 === 0 ){
-			spaceShip.fill(ctx, '#0f0');
+			spaceShip.drawImageArea(ctx, GAME.sprite, 118, 170, 100, 100, '#0f0');
 		} else { // damaged
-			spaceShip.fill(ctx, '#f00');
+			spaceShip.drawImageArea(ctx, GAME.sprite, 233, 170, 100, 100, '#f00');
 		}
 
-		// spaceShot red render
-		for( var i = 0, l = spaceShot.length; i <l ; i++ ){
-			spaceShot[i].fill(ctx, '#f00');
+		// spaceShot sprite render
+		for( var i = 0, l = spaceShot.length; i < l ; i++ ){
+			spaceShot[i].drawImageArea(ctx, GAME.sprite, 375, 695, 25, 25, '#f00');
 		}
 
-		// extraPoint orange render
-		for( var i = 0, l = extraPoints.length; i <l ; i++ ){
-			extraPoints[i].fill(ctx, '#f90');
+		// extraPoint sprite render
+		for( var i = 0, l = extraPoints.length; i < l ; i++ ){
+			extraPoints[i].drawImageArea(ctx, GAME.sprite, 245, 400, 75, 75, '#f90');
 		}
 
-		// multishots yellow render
-		for( var i = 0, l = multiShots.length; i <l ; i++ ){
-			multiShots[i].fill(ctx, '#cc6');
+		// multishots sprite render
+		for( var i = 0, l = multiShots.length; i < l ; i++ ){
+			multiShots[i].drawImageArea(ctx, GAME.sprite, 650, 640, 70, 70, '#cc6');
 		}
 
-		// invaders flashing purple/red render
+		// extra health sprite render
+		/*for( var i = 0, l = extraHealth.length; i < l ; i++ ){
+			extraHealth[i].drawImageArea(ctx, GAME.sprite, 140, 318, 60, 60, '#0f0');
+		}*/
+
+		// invaders flashing sprite render
 		for( var j = 0, l = invaders.length; j <l ; j++ ){
-			if( invaders[j].damage % 2 === 0 ){
-				invaders[j].fill(ctx, '#f0f');
+			if( invaders[j].damage % 4 === 0 ){
+				invaders[j].drawImageArea(ctx, GAME.sprite, 133,510, 70, 70, '#f0f');
 			} else { // damaged
-				invaders[j].fill(ctx, '#f00');
+				invaders[j].drawImageArea(ctx, GAME.sprite, 133, 430, 70, 70, '#f00');		
 			}
 		}
 
