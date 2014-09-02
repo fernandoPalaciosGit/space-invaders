@@ -173,11 +173,16 @@ var moveAsset = function (){
 							var benefit = random(20); //[0, 20]
 							if ( benefit < 10 ) {
 								// recicle position and Dimensions of enemy destroyed
-								if( benefit < 3 ){ // create multishot Asset
-									multiShots.push(
+								if( benefit === 0 ){ // create health Asset
+									extraHealth.push(
 										new Asset(	invaders[j].posX, invaders[j].posY,
 														invaders[j].w, invaders[j].h, 1) );
 
+								} else if ( benefit < 3 ) { // create multishot Asset
+									multiShots.push(
+										new Asset(	invaders[j].posX, invaders[j].posY,
+														invaders[j].w, invaders[j].h, 1) );
+								
 								} else { // create extra score Asset, and reduce one invader
 									extraPoints.push(
 										new Asset(	invaders[j].posX, invaders[j].posY,
@@ -230,6 +235,26 @@ var moveAsset = function (){
 				}
 			}
 
+			// EXTRAHEALTH POWERUPS
+			for (var i = 0, len = extraHealth.length; i < len; i++) {
+				//slower vertical movement
+				extraHealth[i].posY += (extraHealth[i].h/4);
+				
+				// SPACESHIP OR CANVAS INTERSECT WITH EXTRAHEALTH
+				if(	spaceShip.intersect(extraHealth[i]) || // player intersect
+						extraHealth[i].posY > GAME.canvas.height ){ //vertical limit
+
+					// increase 1 point of health
+					if( spaceShip.intersect(extraHealth[i]) ){
+						spaceShip.health++;
+						messages.push( new Message('+UP', spaceShip.posX, spaceShip.posY) );
+					}
+					
+					extraHealth.splice(i--, 1);
+					len--;
+				}
+			}
+
 			// EXTRASCORE POWERUPS
 			for (var i = 0, len = extraPoints.length; i < len; i++) {
 				//slower vertical movement
@@ -248,7 +273,6 @@ var moveAsset = function (){
 					extraPoints.splice(i--, 1);
 					len--;
 				}
-
 			}
 
 			// MULTISHOT POWERUPS
