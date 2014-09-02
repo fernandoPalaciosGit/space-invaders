@@ -11,11 +11,15 @@ var init = function (evLoad){
 	document.addEventListener('keyup', offKeyPressed, false);
 	window.addEventListener('resize', setCanvasFullScreen, false);
 
+	// create sprites
 	GAME.sprite.onerror = function(event){
 		this.src = 'http://www.pcengine.co.uk/sunteam/pics_unfinished/HSS_sprites.png';
 		this.onerror = ""; // no more errors; ensure that the server is not fallen
 	};
    GAME.sprite.src = 'assets/gameSprite.png';
+
+   // create 200 Bgd Stars, 2*2 dimensions
+   Bgd.createStars(400, 1, 1);
 
 	reloadGame();
 	setCanvasFullScreen();
@@ -70,7 +74,7 @@ var run = function (){
 var repaint = function (){
 	requestAnimFrame(repaint);
 	resizeBuffer(350, 500);
-	paintCanvas(GAME.ctx);
+	paintCanvas(GAME.ctx, GAME.ctxBgd);
 };
 
 var moveAsset = function (){
@@ -301,6 +305,15 @@ var moveAsset = function (){
 
 			}
 
+			// move stars background
+			for( var i=0 , len = Bgd.stars.length; i < len ; i++){
+				Bgd.stars[i].posY++;
+				if( Bgd.stars[i].posY > GAME.canvasBgd.height ){
+					Bgd.stars[i].posX = random(GAME.canvasBgd.width);
+					Bgd.stars[i].posY = 0;
+				}
+			}
+
 			// cada iteracion de movimiento, resetear el contador de animate Sprite
 			GAME.animTimerSprite++;
 			if( GAME.animTimerSprite > 360 ){
@@ -323,11 +336,12 @@ var moveAsset = function (){
 	}
 };
 
-var paintCanvas = function(ctx){
-	ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+var paintCanvas = function(ctx, ctxBgd){
+	ctx.fillStyle = 'rgba(0, 0, 0, 0.0)'; // transparent backgrounds
 	ctx.fillRect(0, 0, GAME.canvas.width, GAME.canvas.height);
 	
 	if( GAME.paused ){
+		
 		ctx.textAlign = 'center';
 		if( !GAME.gameover ){
 			ctx.fillStyle ='#0f0';
@@ -341,6 +355,8 @@ var paintCanvas = function(ctx){
 		}
 
 	}else{
+		ctxBgd.fillStyle = 'rgba(0, 0, 0, 0.2)'; // transparent backgrounds
+		ctxBgd.fillRect(0, 0, GAME.canvasBgd.width, GAME.canvasBgd.height);
 
 		// spaceShip flashing sprite render
 		if( spaceShip.damage % 2 === 0 ){
@@ -381,6 +397,11 @@ var paintCanvas = function(ctx){
 		for (var j = 0, len = messages.length; j < len; j++) {
 			ctx.fillStyle ='#fff';
 			ctx.fillText( messages[j].msg, messages[j].posX, messages[j].posY);
+		}
+
+		ctxBgd.fillStyle = '#fff';
+		for(var i=0, len = Bgd.stars.length ; i < len ; i++){
+			ctxBgd.fillRect( Bgd.stars[i].posX, Bgd.stars[i].posY, Bgd.stars[i].w, Bgd.stars[i].h);
 		}
 		
 

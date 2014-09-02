@@ -60,12 +60,35 @@ var Message = function (str, x, y){
 	this.posY = y || 0;
 };
 
+///////////////////////
+// STAR NCONSTRUCTOR //
+///////////////////////
+var Bgd = function (x, y, w, h){
+	this.posX = x;
+	this.posY = y;
+	this.w = w;
+	this.h = h;
+};
+
+Bgd.createStars = function( numStars, w, h ){
+	for(var i = 0; i < numStars; i++){	
+		this.stars.push(
+			new Bgd( random(GAME.canvasBgd.width), random(GAME.canvasBgd.height), w, h ) );
+	}
+};
+
+// sattic constructor functions
+Bgd.stars = [];
+Bgd.cosmos = null;
+
 ////////////////////////
 // VARIABLES GLOBALES //
 ////////////////////////
 var GAME = {
 	canvas: document.querySelector('.invadersCanvas canvas'),
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
+	canvasBgd: document.querySelector('.bgdCanvas canvas'), 
+	ctxBgd: document.querySelector('.bgdCanvas canvas').getContext('2d'),
 	//Assets for improvemnet
 	powerups: {
 		multiShots: [],
@@ -73,6 +96,11 @@ var GAME = {
 		messages: [],
 		extraHealth: []
 	},
+	// // Assets for stars and background cosmos
+	// bgd: {
+	// 	stars: [],
+	// 	cosmos: null
+	// },
 	// Asset for the gamer
 	player: {
 		spaceShip: new Asset(0, 0, 20, 20),

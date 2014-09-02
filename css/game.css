@@ -13,9 +13,21 @@ h1{
 .invadersCanvas canvas{
 	width: 350px;
 	height: 500px;
-	border: 5px solid red;
+	border-width: 5px;
+	border-color: #A00;
+	border-right-style: solid;
+	border-left-style: solid;
+	z-index: 20;
+
 	/*como seteamos pantall completa el canvas, los bordes salen fuera de viewport*/
-	box-sizing: border-box;
+}
+.bgdCanvas canvas{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 10;
 }
 .showLayer{
 	display: block !important;
