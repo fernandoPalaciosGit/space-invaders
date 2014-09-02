@@ -308,6 +308,7 @@ var moveAsset = function (){
 			// move stars background
 			for( var i=0 , len = Bgd.stars.length; i < len ; i++){
 				Bgd.stars[i].posY++;
+
 				if( Bgd.stars[i].posY > GAME.canvasBgd.height ){
 					Bgd.stars[i].posX = random(GAME.canvasBgd.width);
 					Bgd.stars[i].posY = 0;
@@ -399,9 +400,9 @@ var paintCanvas = function(ctx, ctxBgd){
 			ctx.fillText( messages[j].msg, messages[j].posX, messages[j].posY);
 		}
 
-		ctxBgd.fillStyle = '#fff';
+		// flashing stars
 		for(var i=0, len = Bgd.stars.length ; i < len ; i++){
-			ctxBgd.fillRect( Bgd.stars[i].posX, Bgd.stars[i].posY, Bgd.stars[i].w, Bgd.stars[i].h);
+			Bgd.stars[i].flashing( ctxBgd );
 		}
 		
 

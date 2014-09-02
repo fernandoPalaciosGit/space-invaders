@@ -63,21 +63,34 @@ var Message = function (str, x, y){
 ///////////////////////
 // STAR NCONSTRUCTOR //
 ///////////////////////
-var Bgd = function (x, y, w, h){
+var Bgd = function (x, y, w, h, tf){
 	this.posX = x;
 	this.posY = y;
 	this.w = w;
 	this.h = h;
-};
+	this.timerFlash = tf || 0;
 
-Bgd.createStars = function( numStars, w, h ){
-	for(var i = 0; i < numStars; i++){	
-		this.stars.push(
-			new Bgd( random(GAME.canvasBgd.width), random(GAME.canvasBgd.height), w, h ) );
+	this.flashing = function(ctx){
+		// set new timer flashing (random flashing)
+		this.timerFlash += 2;
+		if( this.timerFlash > 120 ){
+			this.timerFlash -= 120;
+		}
+		var c = (255 - this.timerFlash);
+      ctx.fillStyle = 'rgb('+c+','+c+','+c+')';
+      ctx.fillRect( this.posX, this.posY, this.w, this.h );
 	}
 };
 
-// sattic constructor functions
+Bgd.createStars = function( numStars, w, h){
+	for(var i = 0; i < numStars; i++){	
+		this.stars.push(
+			// random timer flashing for each star
+			new Bgd( random(GAME.canvasBgd.width), random(GAME.canvasBgd.height), w, h, random(100) ) );
+	}
+};
+
+// static constructor functions
 Bgd.stars = [];
 Bgd.cosmos = null;
 
