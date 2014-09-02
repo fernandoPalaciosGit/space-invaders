@@ -28,6 +28,7 @@ var reloadGame = function (){
 
 	GAME.paused = true;
 	GAME.score = 0;
+	GAME.animTimerSprite = 0;
 	
 	// start with no shots or powerups or messages
 	GAME.powerups.multiShots.length = 0;
@@ -35,8 +36,10 @@ var reloadGame = function (){
 	GAME.player.spaceShot.length = 0;
 	GAME.powerups.messages.length = 0;
 
-	// start whith one invader enemy (2 points of health)
+	// start whith three invaders enemys (2 points of health)
 	invaders.length = 0;
+	invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 15, 15, 2) );
+	invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 15, 15, 2) );
 	invaders.push( new Asset(random(GAME.canvas.width/10)*10, 0, 15, 15, 2) );
 };
 
@@ -53,7 +56,7 @@ var offKeyPressed = function (evKeyUp){
 };
 
 var run = function (){
-	window.setTimeout(run, 1000/50); //frames por segundo
+	window.setTimeout(run, 1000/40); //frames por segundo
 	moveAsset();
 };
 
@@ -273,6 +276,13 @@ var moveAsset = function (){
 
 			}
 
+			// cada iteracion de movimiento, resetear el contador de animate Sprite
+			GAME.animTimerSprite++;
+			if( GAME.animTimerSprite > 360 ){
+				GAME.animTimerSprite -= 360;
+			} 
+
+
 			// allow an immunity of 20 loops while the player is damaged
 			if( spaceShip.damage > 0 ){
 				spaceShip.damage--;
@@ -315,9 +325,8 @@ var paintCanvas = function(ctx){
 
 		// spaceShip flashing sprite render
 		if( spaceShip.damage % 2 === 0 ){
-			spaceShip.drawImageArea(ctx, GAME.sprite, 118, 170, 100, 100, '#0f0');
-		} else { // damaged
-			spaceShip.drawImageArea(ctx, GAME.sprite, 233, 170, 100, 100, '#f00');
+			// animate spaship with vertical position (posSprite = 170)
+			spaceShip.drawImageArea(ctx, GAME.sprite, 118, 170+(GAME.animTimerSprite%2)*5, 100, 100, '#0f0');
 		}
 
 		// spaceShot sprite render
