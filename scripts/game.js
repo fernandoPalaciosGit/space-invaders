@@ -12,11 +12,18 @@ var init = function (evLoad){
 	window.addEventListener('resize', setCanvasFullScreen, false);
 
 	// create sprites
-	GAME.sprite.onerror = function(event){
+	GAME.sprite.onerror = function(evError){
 		this.src = 'http://www.pcengine.co.uk/sunteam/pics_unfinished/HSS_sprites.png';
-		this.onerror = ""; // no more errors; ensure that the server is not fallen
+		this.onerror = ''; // no more errors; ensure that the server is not fallen
 	};
    GAME.sprite.src = 'assets/gameSprite.png';
+
+   // create background image
+   GAME.bdgCanvas.onerror = function(evError){
+   	this.src = 'https://sites.google.com/site/juegoscanvas/nebula.jpg';
+   	this.onerror = ''; // no more errors; ensure that the server is not fallen
+   };
+   GAME.bdgCanvas.src = 'assets/canvasBgd.jpg';
 
    // create 200 Bgd Stars, 2*2 dimensions
    Bgd.createStars(400, 1, 1);
@@ -212,7 +219,6 @@ var moveAsset = function (){
 					}
 				}
 
-
 				if ( invaders[j].damage > 0 ) {
 					invaders[j].damage--;
 				}
@@ -321,7 +327,6 @@ var moveAsset = function (){
 				GAME.animTimerSprite -= 360;
 			} 
 
-
 			// allow an immunity of 20 loops while the player is damaged
 			if( spaceShip.damage > 0 ){
 				spaceShip.damage--;
@@ -356,8 +361,12 @@ var paintCanvas = function(ctx, ctxBgd){
 		}
 
 	}else{
-		ctxBgd.fillStyle = 'rgba(0, 0, 0, 0.3)'; // transparent backgrounds
+		// transparent backgrounds
+		ctxBgd.fillStyle = 'rgba(0, 0, 0, 0.3)';
 		ctxBgd.fillRect(0, 0, GAME.canvasBgd.width, GAME.canvasBgd.height);
+
+		// draw background movement canvas
+		Bgd.cosmos.drawBgdCanvas(ctx, GAME.bdgCanvas, 'rgba(255, 255, 255, 0.0)');
 
 		// spaceShip flashing sprite render
 		if( spaceShip.damage % 2 === 0 ){
@@ -404,7 +413,6 @@ var paintCanvas = function(ctx, ctxBgd){
 		for(var i=0, len = Bgd.stars.length ; i < len ; i++){
 			Bgd.stars[i].flashing( ctxBgd );
 		}
-		
 
 		ctx.fillStyle ='#fff';
 		// var showPress = GAME.keys.lastPress+' (' +GAME.keys.isPressing[ GAME.keys.lastPress ]+')';

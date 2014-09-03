@@ -13,10 +13,10 @@ h1{
 .invadersCanvas canvas{
 	width: 350px;
 	height: 500px;
-	border-width: 5px;
+	/*border-width: 5px;
 	border-color: #A00;
 	border-right-style: solid;
-	border-left-style: solid;
+	border-left-style: solid;*/
 	z-index: 20;
 
 	/*como seteamos pantall completa el canvas, los bordes salen fuera de viewport*/

@@ -63,24 +63,49 @@ var Message = function (str, x, y){
 ///////////////////////
 // STAR NCONSTRUCTOR //
 ///////////////////////
-var Bgd = function (x, y, w, h, tf){
+var Bgd = function (x, y, w, h, t){
 	this.posX = x;
 	this.posY = y;
 	this.w = w;
 	this.h = h;
-	this.timerFlash = tf || 0;
+	this.timer = t || 0;
+};
 
-	this.flashing = function(ctx){
-		// set new timer flashing (random flashing)
-		this.timerFlash += 2;
-		if( this.timerFlash > 120 ){
-			this.timerFlash -= 120;
-		}
+// draw flashing stars
+Bgd.prototype.flashing = function(ctx){
+	// set new timer flashing (random flashing)
+	this.timer += 2;
+		if( this.timer > 120 ){
+		this.timer -= 120;
+	}
 
-		// when we arrived at the end of flashing subtract half to avoid the abrupt change
-		var c = 255 - Math.abs( 120 - this.timerFlash);
-      ctx.fillStyle = 'rgb('+c+','+c+','+c+')';
-      ctx.fillRect( this.posX, this.posY, this.w, this.h );
+	// when we arrived at the end of flashing subtract half to avoid the abrupt change
+	var c = 255 - Math.abs( 120 - this.timer);
+	ctx.fillStyle = 'rgb('+c+','+c+','+c+')';
+	ctx.fillRect( this.posX, this.posY, this.w, this.h );
+}
+
+// draw background canvas
+Bgd.prototype.drawBgdCanvas = function(ctx, bgdCanvas, color){
+	if( !!bgdCanvas.width ){ // check loaded image
+		//timeout background move
+		this.timer++;
+      if( this.timer > 0 ) {
+          this.timer -= this.h;
+      }
+
+      // draw two times background image delayed
+      ctx.globalAlpha = 0.5;
+		ctx.drawImage(	bgdCanvas, 0, this.timer,
+							this.w, this.h);
+
+		ctx.drawImage(	bgdCanvas, 0, this.timer + this.h,
+							this.w, this.h);
+		ctx.globalAlpha = 1;
+		
+	}else{
+		ctx.fillStyle = color;
+		ctx.fillRect( this.posX, this.posY, this.w, this.h );
 	}
 };
 
@@ -91,10 +116,6 @@ Bgd.createStars = function( numStars, w, h){
 			new Bgd( random(GAME.canvasBgd.width), random(GAME.canvasBgd.height), w, h, random(100) ) );
 	}
 };
-
-// static constructor functions
-Bgd.stars = [];
-Bgd.cosmos = null;
 
 ////////////////////////
 // VARIABLES GLOBALES //
@@ -111,11 +132,6 @@ var GAME = {
 		messages: [],
 		extraHealth: []
 	},
-	// // Assets for stars and background cosmos
-	// bgd: {
-	// 	stars: [],
-	// 	cosmos: null
-	// },
 	// Asset for the gamer
 	player: {
 		spaceShip: new Asset(0, 0, 20, 20),
@@ -126,6 +142,7 @@ var GAME = {
 		invaders: []
 	},
 	sprite: new Image(),
+	bdgCanvas: new Image(),
 	animTimerSprite: 0, // animate some sprites
 	keys: {
 		lastPress: null,
@@ -143,3 +160,8 @@ var GAME = {
 	gameover: false,
 	score: 0
 };
+
+// static constructor functions, for background canvas
+Bgd.stars = [];
+// create Bgd canvas (tile image for vertical movement)
+Bgd.cosmos = new Bgd( 0, 0, GAME.canvas.width, GAME.canvas.height, 0);
