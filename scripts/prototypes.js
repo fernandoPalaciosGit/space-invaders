@@ -1,5 +1,5 @@
 ///////////////////////////
-// CONSTRUCTOR DE ASSETS //
+// GAME ASSETS CONSTRUCTOR //
 ///////////////////////////
 var Asset = function (x, y, w, h, hh){
 	this.posX = x || 0;
@@ -117,6 +117,24 @@ Bgd.createStars = function( numStars, w, h){
 	}
 };
 
+/////////////////////////
+// SCENES CONSTRUCTOR //
+/////////////////////////
+var Scene = function (){
+	// set id scene from last index constructor Array scenes
+	this.id = this.constructor.addScenes.length;
+	this.constructor.addScenes.push(this);
+};
+
+// Propiedades estaticas de constructor (this.contructor)
+Scene.addScenes = [];
+Scene.currentScene = null;
+
+// propiedades publicas de instancias (implementacion particular de cada escena)
+Scene.prototype.act = function (){};
+Scene.prototype.paint = function (ctx, ctxBgd){};
+Scene.prototype.load = function (){};
+
 ////////////////////////
 // VARIABLES GLOBALES //
 ////////////////////////
@@ -131,6 +149,11 @@ var GAME = {
 		extraPoints: [],
 		messages: [],
 		extraHealth: []
+	},
+	// kind of our game Scenes
+	scenes:{
+		invaders: new Scene(),
+		jokerEnemy: new Scene()
 	},
 	// Asset for the gamer
 	player: {
