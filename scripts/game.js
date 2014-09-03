@@ -28,6 +28,62 @@ var init = function (evLoad){
 	repaint();
 };
 
+// GLOBAL VARIABLES
+var GAME = {
+	canvas: document.querySelector('.invadersCanvas canvas'),
+	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
+	canvasBgd: document.querySelector('.bgdCanvas canvas'), 
+	ctxBgd: document.querySelector('.bgdCanvas canvas').getContext('2d'),
+	//Assets for improvemnet
+	powerups: {
+		multiShots: [],
+		extraPoints: [],
+		messages: [],
+		extraHealth: []
+	},
+	// Asset for the gamer
+	player: {
+		spaceShip: new Asset(0, 0, 20, 20),
+		spaceShot: []
+	},
+	// Assets for enemies
+	machine:{
+		invaders: []
+	},
+	sprite: new Image(),
+	bdgCanvas: new Image(),
+	animTimerSprite: 0, // animate some sprites
+	// kind of our game Scenes
+	scenes:{
+		invaders: null,
+		jokerEnemy: null
+	},
+	keys: {
+		lastPress: null,
+		isPressing : [],
+		allowed : {
+			KEY_LEFT : 37,
+			KEY_UP : 38,
+			KEY_RIGHT : 39,
+			KEY_DOWN : 40,
+			KEY_ENTER: 13,
+			KEY_SPACE: 32
+		}
+	},
+	paused : false,
+	gameover: false,
+	score: 0
+};
+
+// INIT GLOBAL VARIABLES
+// static constructor functions, for background canvas
+Bgd.stars = [];
+// create Bgd canvas (tile image for vertical movement)
+Bgd.cosmos = new Bgd( 0, 0, GAME.canvas.width, GAME.canvas.height, 0);
+// create scene prototype and constructor heritance
+GAME.scenes.invaders = new Scene();
+GAME.scenes.jokerEnemy = new Scene();
+
 // indicar el estado de tecla presionada
 var onKeyPressed = function(evKeyDown){
 	GAME.keys.lastPress = evKeyDown.which || evKeyDown.keyCode;
