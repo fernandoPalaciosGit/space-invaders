@@ -1,3 +1,11 @@
+@font-face{
+   font-family: "BigKeyCaps";
+   src:  local('☺'),
+         url("../fonts/BigKeyCaps.ttf") format("truetype");
+   font-weight: normal;
+   font-style: normal;
+   font-variant: normal;
+}
 body{
 	text-align: center;
 	background-color: #000;
@@ -6,6 +14,14 @@ body{
 h1{
 	color: #fff;
 	font-size: 1em;
+}
+span[class^='icon']{
+	color: #000;
+}
+span[class^='icon']:after{
+	color: #fff;
+	font-family: "BigKeyCaps";
+	content: attr(title);
 }
 .instructions{
 	position: relative;

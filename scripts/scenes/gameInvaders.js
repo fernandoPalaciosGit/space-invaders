@@ -233,7 +233,7 @@
 				ctx.fillText('STAGE 1', GAME.canvas.width/2, GAME.canvas.height/2-20);
 				ctx.fillText('DESTROY 100 ALIENS', GAME.canvas.width/2, GAME.canvas.height/2);
 				ctx.fillText('press enter to play', GAME.canvas.width/2, (GAME.canvas.height/2)+20);
-				GAME.sounds.loose.pool[0].load();
+				
 				GAME.sounds.game.pool[0].pause();
 			}else{
 				ctx.fillStyle ='#f0f';
