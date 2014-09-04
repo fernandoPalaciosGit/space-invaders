@@ -8,14 +8,14 @@ var init = function (evLoad){
 		this.src = 'http://www.pcengine.co.uk/sunteam/pics_unfinished/HSS_sprites.png';
 		this.onerror = ''; // no more errors; ensure that the server is not fallen
 	};
-   GAME.sprite.src = 'assets/gameSprite.png';
+   GAME.sprite.src = 'assets/images/gameSprite.png';
 
    // create background image
    GAME.bdgCanvas.onerror = function(evError){
    	this.src = 'https://sites.google.com/site/juegoscanvas/nebula.jpg';
    	this.onerror = ''; // no more errors; ensure that the server is not fallen
    };
-   GAME.bdgCanvas.src = 'assets/canvasBgd.jpg';
+   GAME.bdgCanvas.src = 'assets/images/canvasBgd.jpg';
 
    // create 200 Bgd Stars, 2*2 dimensions
    Bgd.createStars(400, 1, 1);
@@ -34,6 +34,34 @@ var GAME = {
 	ctx: document.querySelector('.invadersCanvas canvas').getContext('2d'),
 	canvasBgd: document.querySelector('.bgdCanvas canvas'), 
 	ctxBgd: document.querySelector('.bgdCanvas canvas').getContext('2d'),
+	// game sounds: initPool(typePool, volumePool, looping)
+	sounds: {
+		laser: ( function(){
+					var sound = new SoundPool(10);
+					sound.initPool('laser', 0.1, false);
+					return sound;
+				}() ),
+		explotion: ( function(){
+					var sound = new SoundPool(20);
+					sound.initPool('explotion', 0.1, false);
+					return sound;
+				}() ),
+		death: ( function(){
+					var sound = new SoundPool(1);
+					sound.initPool('death', 0.1, false);
+					return sound;
+				}() ),
+		game: ( function(){
+					var sound = new SoundPool(1);
+					sound.initPool('bgdGame', 0.15, true);
+					return sound;
+				}() ),
+		loose: ( function(){
+					var sound = new SoundPool(1);
+					sound.initPool('endGame', 0.25, true);
+					return sound;
+				}() ),
+	},
 	//Assets for improvemnet
 	powerups: {
 		multiShots: [],
@@ -52,6 +80,7 @@ var GAME = {
 	},
 	sprite: new Image(),
 	bdgCanvas: new Image(),
+
 	animTimerSprite: 0, // animate some sprites
 	// kind of our game Scenes
 	scenes:{

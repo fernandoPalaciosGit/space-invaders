@@ -33,6 +33,11 @@
 
 			// RELOAD SAME SCENE WHEN NO HEALTH
 			if( GAME.gameover ){
+				GAME.sounds.game.pool[0].load();
+				GAME.sounds.game.pool[0].pause();
+				GAME.sounds.loose.pool[0].play();
+				GAME.sounds.death.getSound();
+
 				loadScene(GAME.scenes.invaders);
 			
 			// LOAD THE NEX LEVEL -> Joker Boss
@@ -40,6 +45,7 @@
 				loadScene(GAME.scenes.jokerEnemy);
 			
 			} else {
+				// GAME.sounds.game.pool[0].play();
 				this.spaceMovements();
 
 				// MOVE MESSAGES
@@ -103,7 +109,8 @@
 									// console.log(benefit + ' >= 10 : NO benefit');
 								}
 
-								// new position of enemy destroyed 
+								// new position of enemy destroyed
+								GAME.sounds.explotion.getSound(); 
 								invaders[j].posY = 0;
 								invaders[j].posX = random(GAME.canvas.width/10)*10;
 								invaders[j].setHealth(2);
@@ -226,6 +233,8 @@
 				ctx.fillText('STAGE 1', GAME.canvas.width/2, GAME.canvas.height/2-20);
 				ctx.fillText('DESTROY 100 ALIENS', GAME.canvas.width/2, GAME.canvas.height/2);
 				ctx.fillText('press enter to play', GAME.canvas.width/2, (GAME.canvas.height/2)+20);
+				GAME.sounds.loose.pool[0].load();
+				GAME.sounds.game.pool[0].pause();
 			}else{
 				ctx.fillStyle ='#f0f';
 				ctx.fillText(	'GAME OVER', GAME.canvas.width/2, GAME.canvas.height/2);
@@ -234,6 +243,8 @@
 			}
 
 		}else{
+			GAME.sounds.loose.pool[0].pause();
+			GAME.sounds.game.pool[0].play();
 			this.spaceRender(ctx, ctxBgd);
 			
 			// extraPoint sprite render

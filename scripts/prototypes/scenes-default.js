@@ -28,6 +28,7 @@ var SpaceRules = function( rules ){
 	};
 
 	this.spaceMovements = function(){
+
 		// SPACESHIP HORIZONTAL MOVEMENT
 		if ( GAME.keys.isPressing[ GAME.keys.allowed.KEY_RIGHT ] ){
 			spaceShip.posX += (spaceShip.w/2);
@@ -58,6 +59,7 @@ var SpaceRules = function( rules ){
 				multi--;
 			}
 			
+			GAME.sounds.laser.getSound();
 			GAME.keys.lastPress = null;
 		}
 
