@@ -81,7 +81,7 @@ var GAME = {
 	machine:{
 		invaders: [],
 		joker: {
-			asset: new Asset(10, 10, 60, 60), // yellow spacecraft
+			asset: new Asset(10, 10, 60, 60, 15), // yellow spacecraft
 			spaceShot: [],
 			shooterTimer: 0 // delay joker shooter
 		},

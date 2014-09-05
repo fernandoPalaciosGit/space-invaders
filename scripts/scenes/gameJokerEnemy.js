@@ -109,6 +109,8 @@
 			this.spaceRender(ctx, ctxBgd);
 			
 			// ENEMY RENDER
+			ctx.fillStyle = '#fff';
+			ctx.fillText('Joker Health: '+ joker.health, 5, 10);
 			joker.drawImageArea(ctx, GAME.sprite, 590, 490, 130, 130, '#f00');
 
 			// multishots sprite render
