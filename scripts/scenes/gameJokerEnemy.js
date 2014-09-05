@@ -43,11 +43,18 @@
 				this.spaceMovements();
 
 				// move horizontal position
-				joker.posX += ( joker.dir * ( joker.w/15 ) );
+				joker.posX += ( joker.dir * random( joker.w/7 ) );
+
+				// ensure asset not blocking
+				if ( (joker.posX + (joker.w / 2) ) > GAME.canvas.width ) {
+					joker.posX = 0;
+
+				} else if ( (joker.posX + (joker.w / 2) ) < 0 ) {
+					joker.posX = GAME.canvas.width - joker.w;
 
 				// change joker direction
-				if(	(joker.posX + joker.w) > GAME.canvas.width ||
-						(joker.posX < 0) ){
+				} else if (	(joker.posX + joker.w) > GAME.canvas.width ||
+								(joker.posX < 0) ){
 					joker.dir *= -1;
 				}
 
