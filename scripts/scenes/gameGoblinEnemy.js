@@ -125,7 +125,7 @@
 
 			// flashing image
 			if( goblin.damage % 2 === 0 ){
-				goblin.drawImageArea(ctx, GAME.sprite, 590, 490, 130, 130, '#f00');
+				goblin.drawImageArea(ctx, GAME.sprite, 130, 640, 190, 130, '#f00');
 			}
 
 			// multishots sprite render

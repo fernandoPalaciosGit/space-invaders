@@ -91,7 +91,7 @@ var GAME = {
 			}
 		},
 		goblin: {
-			asset: new Asset(10, 10, 60, 60, 20),
+			asset: new Asset(10, 10, 70, 60, 20),
 			spaceShot: [],
 			shooterTimer: 0,
 			hardness: {
