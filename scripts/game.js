@@ -76,7 +76,13 @@ var GAME = {
 	},
 	// Assets for enemies
 	machine:{
-		invaders: []
+		invaders: [],
+		joker: {
+			asset: new Asset(0, 10, 30, 30), // yellow spacecraft
+			spaceShot: [],
+			shooterTimer: 0 // delay joker shooter
+		},
+		greenGoblin: new Asset(0, 0, 30, 30) // green boss
 	},
 	sprite: new Image(),
 	bdgCanvas: new Image(),

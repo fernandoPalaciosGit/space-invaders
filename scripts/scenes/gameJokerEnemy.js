@@ -1,3 +1,7 @@
+//////////////////
+// JOKER ENEMY: 
+// top horizontal movement, burst shooting
+//////////////////
 (function(	spaceShip,
 				spaceShot,
 				invaders,
@@ -35,6 +39,7 @@
 				this.spaceMovements();
 
 				// ENEMY MOVEMENT
+				
 			}
 		}
 	};
