@@ -34,9 +34,13 @@
 			
 			// RELOAD INVADERS FIRST SCENE
 			if( GAME.gameover){ // check if player win the boss
-				this.deathSpeceCraft( GAME.scenes.invaders );
+				this.deathSpeceCraft( );
+				loadScene( GAME.scenes.invaders );
 			
-			} else if ( GAME.score > 200 ) {
+			} else if( joker.health < 1 ){
+				/////////////////////////////////////////////
+				// check another scenoe, not the first //
+				/////////////////////////////////////////////
 				loadScene(GAME.scenes.invaders);
 
 			} else {
@@ -72,8 +76,9 @@
 				for (var i = 0, len = jokerShot.length; i < len; i++) {
 					jokerShot[i].posY += 5;
 
-				    // collisions
-					if( spaceShip.intersect(jokerShot[i]) ){
+				    // COLLISION
+					if(	jokerShot[i].intersect(spaceShip) &&
+							spaceShip.damage < 1 ){
 				    	spaceShip.health--;
 						spaceShip.setDamage(20); // inmunity of 20 loops
 
@@ -92,7 +97,24 @@
 					}
 				}
 
-			}
+				// MOVE SPACECRAFT SHOTS
+				// MOVE SPACECRAFT SHOTS
+				for (var k = 0, all = spaceShot.length; k < all; k++) {
+						if(	spaceShot[k].intersect( joker ) &&
+							joker.damage < 1 ){
+
+						// damage to invader
+						joker.health--;
+						joker.setDamage(10);
+						GAME.score += 5;
+					}
+				}
+
+				if ( joker.damage > 0 ) {
+						joker.damage--;
+				}
+
+			} //EXIT MOVEMENTS no paused
 
 
 		}
@@ -111,7 +133,12 @@
 			// ENEMY RENDER
 			ctx.fillStyle = '#fff';
 			ctx.fillText('Joker Health: '+ joker.health, 5, 10);
-			joker.drawImageArea(ctx, GAME.sprite, 590, 490, 130, 130, '#f00');
+
+			// flashing image
+			if( joker.damage % 2 === 0 ){
+				joker.drawImageArea(ctx, GAME.sprite, 590, 490, 130, 130, '#f00');
+			}
+
 
 			// multishots sprite render
 			for( var i = 0, l = jokerShot.length; i < l ; i++ ){

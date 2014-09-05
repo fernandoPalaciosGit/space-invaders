@@ -38,12 +38,11 @@ var SpaceRules = function( rules ){
 		}
 	};
 
-	this.deathSpeceCraft = function( scene ){
+	this.deathSpeceCraft = function( ){
 		GAME.sounds.game.pool[0].load();
 		GAME.sounds.game.pool[0].pause();
 		GAME.sounds.death.getSound();
 		GAME.sounds.loose.pool[0].play();
-		loadScene( scene );
 	};
 
 	this.spaceMovements = function(){
