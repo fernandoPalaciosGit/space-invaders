@@ -21,7 +21,10 @@ var init = function (evLoad){
    Bgd.createStars(400, 1, 1);
 
 	// load the Invaders scene
-	loadScene(GAME.scenes.invaders);
+	///////////////////////////////////////
+	// loadScene(GAME.scenes.invaders); //
+	///////////////////////////////////////
+	loadScene(GAME.scenes.jokerEnemy);
 
 	setCanvasFullScreen();
 	run();
@@ -78,7 +81,7 @@ var GAME = {
 	machine:{
 		invaders: [],
 		joker: {
-			asset: new Asset(0, 10, 30, 30), // yellow spacecraft
+			asset: new Asset(10, 10, 60, 60), // yellow spacecraft
 			spaceShot: [],
 			shooterTimer: 0 // delay joker shooter
 		},

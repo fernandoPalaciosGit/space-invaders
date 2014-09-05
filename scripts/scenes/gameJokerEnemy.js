@@ -8,7 +8,10 @@
 				extraPoints,
 				multiShots,
 				messages,
-				extraHealth	){
+				extraHealth,
+				joker,
+				jokerShot,
+				jokerTimer	){
 
 	GAME.scenes.jokerEnemy.load = function(){
 		this.spaceLoadSettings();
@@ -19,6 +22,7 @@
 		if( spaceShip.health < 5 ){
 			spaceShip.setHealth(5);
 		}
+
 	};
 
 	GAME.scenes.jokerEnemy.act = function(){
@@ -30,7 +34,7 @@
 			
 			// RELOAD INVADERS FIRST SCENE
 			if( GAME.gameover){ // check if player win the boss
-				this.deathSpeceCraft();
+				this.deathSpeceCraft( GAME.scenes.invaders );
 			
 			} else if ( GAME.score > 200 ) {
 				loadScene(GAME.scenes.invaders);
@@ -38,8 +42,18 @@
 			} else {
 				this.spaceMovements();
 
-				// ENEMY MOVEMENT
-				
+				// move horizontal position
+				joker.posX += ( joker.dir * ( joker.w/15 ) );
+
+				// change joker direction
+				if(	(joker.posX + joker.w) > GAME.canvas.width ||
+						(joker.posX < 0) ){
+					joker.dir *= -1;
+				}
+
+
+
+
 			}
 		}
 	};
@@ -54,8 +68,8 @@
 		}else{
 			this.spaceRender(ctx, ctxBgd);
 			
-			// ENEMY
-
+			// ENEMY RENDER
+			joker.drawImageArea(ctx, GAME.sprite, 590, 490, 130, 130, '#f00');		
 		}
 	};
 
@@ -65,4 +79,7 @@
 	GAME.powerups.extraPoints,
 	GAME.powerups.multiShots,
 	GAME.powerups.messages,
-	GAME.powerups.extraHealth	));
+	GAME.powerups.extraHealth,
+	GAME.machine.joker.asset,
+	GAME.machine.joker.spaceShot,
+	GAME.machine.joker.shooterTimer	));

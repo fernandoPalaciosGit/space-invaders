@@ -28,7 +28,7 @@
 
 			// RELOAD SAME SCENE WHEN NO HEALTH
 			if( GAME.gameover ){
-				this.deathSpeceCraft();
+				this.deathSpeceCraft( GAME.scenes.invaders );
 			
 			// LOAD THE NEX LEVEL -> Joker Boss
 			} else if ( GAME.score > 100 ) {

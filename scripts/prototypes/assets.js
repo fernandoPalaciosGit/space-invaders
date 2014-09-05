@@ -5,6 +5,7 @@ var Asset = function (x, y, w, h, hh){
 	this.h = h || this.w;
 	this.health = hh || 3;
 	this.damage = 0;
+	this.dir = 1;
 
 	this.setHealth = function(h){
 		this.health = h;
@@ -46,4 +47,4 @@ Asset.prototype.drawImageArea = function (ctx, sprite, cutPosX, cutPosY, cutWidt
 };
 
 // aditional properties only for player spaceship
-Asset.prototype.multishot = null;
+Asset.prototype.multishot = 1;
