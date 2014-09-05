@@ -11,7 +11,8 @@
 				extraHealth,
 				joker,
 				jokerShot,
-				jokerTimer	){
+				jokerTimer,
+				jokerHard	){
 
 	GAME.scenes.jokerEnemy.load = function(){
 		this.spaceLoadSettings();
@@ -23,6 +24,10 @@
 			spaceShip.setHealth(5);
 		}
 
+		joker.health = 20;
+		jokerShot.length = 0;
+		jokerHard.move = 7;
+		jokerHard.shot = 30;
 	};
 
 	GAME.scenes.jokerEnemy.act = function(){
@@ -39,15 +44,24 @@
 			
 			} else if( joker.health < 1 ){
 				/////////////////////////////////////////////
-				// check another scenoe, not the first //
+				// loadScene(GAME.scenes.greenGoblin); //
 				/////////////////////////////////////////////
-				loadScene(GAME.scenes.invaders);
-
+				loadScene( GAME.scenes.invaders );
+				
 			} else {
 				this.spaceMovements();
 
+				// select hardness level
+				if ( joker.health < 10 ) {
+					jokerHard.move = 5;
+					jokerHard.shot = 10;
+				} else if ( joker.health < 4 ){
+					jokerHard.move = 4;
+					jokerHard.shot = 4;
+				}
+
 				// ENEMY HORIZONTAL MOVEMENT
-				joker.posX += ( joker.dir * random( joker.w/7 ) );
+				joker.posX += ( joker.dir * random( joker.w/jokerHard.move ) );
 
 				// ensure asset not blocking
 				if ( (joker.posX + (joker.w / 2) ) > GAME.canvas.width ) {
@@ -69,7 +83,7 @@
 							shotPosX = joker.posX + (joker.w/2) - (shotDim/2),
 							shotPosY = joker.posY + joker.h;
 					jokerShot.push( new Asset( shotPosX, shotPosY, shotDim, shotDim) );
-					jokerTimer = 10 + random(30);
+					jokerTimer = 10 + random( jokerHard.shot );
 				}
 
 				// MOVE JOKER SHOOTS
@@ -97,7 +111,6 @@
 					}
 				}
 
-				// MOVE SPACECRAFT SHOTS
 				// MOVE SPACECRAFT SHOTS
 				for (var k = 0, all = spaceShot.length; k < all; k++) {
 						if(	spaceShot[k].intersect( joker ) &&
@@ -156,4 +169,5 @@
 	GAME.powerups.extraHealth,
 	GAME.machine.joker.asset,
 	GAME.machine.joker.spaceShot,
-	GAME.machine.joker.shooterTimer	));
+	GAME.machine.joker.shooterTimer,
+	GAME.machine.joker.hardness	));

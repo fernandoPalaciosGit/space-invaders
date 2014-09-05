@@ -81,9 +81,13 @@ var GAME = {
 	machine:{
 		invaders: [],
 		joker: {
-			asset: new Asset(10, 10, 60, 60, 15), // yellow spacecraft
+			asset: new Asset(10, 10, 60, 60, 20), // yellow spacecraft
 			spaceShot: [],
-			shooterTimer: 0 // delay joker shooter
+			shooterTimer: 0, // delay joker shooter
+			hardness: {
+				move: 7,
+				shot: 30
+			}
 		},
 		greenGoblin: new Asset(0, 0, 30, 30) // green boss
 	},
