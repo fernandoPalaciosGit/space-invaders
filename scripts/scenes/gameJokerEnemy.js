@@ -42,7 +42,7 @@
 			} else {
 				this.spaceMovements();
 
-				// move horizontal position
+				// ENEMY HORIZONTAL MOVEMENT
 				joker.posX += ( joker.dir * random( joker.w/7 ) );
 
 				// ensure asset not blocking
@@ -57,6 +57,27 @@
 								(joker.posX < 0) ){
 					joker.dir *= -1;
 				}
+
+				// GENERATE SHOOTS (random shooter)
+				jokerTimer--;
+				if( jokerTimer < 0 ){
+					var	shotDim = 5,
+							shotPosX = joker.posX + (joker.w/2) - (shotDim/2),
+							shotPosY = joker.posY + joker.h;
+					jokerShot.push( new Asset( shotPosX, shotPosY, shotDim, shotDim) );
+					jokerTimer = 10 + random(30);
+				}
+
+				// MOVE JOKER SHOOTS
+				for (var i = 0, len = jokerShot.length; i < len; i++) {
+				    jokerShot[i].posY += 5;
+
+				    // remove shots outside canvas
+				    if( jokerShot[i].posY > GAME.canvas.height){
+						jokerShot.splice(i, 1);
+						len--;
+				    }
+				};
 
 
 
@@ -76,7 +97,12 @@
 			this.spaceRender(ctx, ctxBgd);
 			
 			// ENEMY RENDER
-			joker.drawImageArea(ctx, GAME.sprite, 590, 490, 130, 130, '#f00');		
+			joker.drawImageArea(ctx, GAME.sprite, 590, 490, 130, 130, '#f00');
+
+			// multishots sprite render
+			for( var i = 0, l = jokerShot.length; i < l ; i++ ){
+				jokerShot[i].drawImageArea(ctx, GAME.sprite, 650, 640, 70, 70, '#cc6');
+			}
 		}
 	};
 
