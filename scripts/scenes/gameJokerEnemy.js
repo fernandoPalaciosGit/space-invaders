@@ -9,6 +9,8 @@
 	GAME.scenes.jokerEnemy.load = function(){
 		this.spaceLoadSettings();
 		
+		// adjust the score
+		GAME.score = 100;
 		// maintain initila spaceship life
 		if( spaceShip.health < 5 ){
 			spaceShip.setHealth(5);
@@ -16,21 +18,19 @@
 	};
 
 	GAME.scenes.jokerEnemy.act = function(){
-		// STOP MOVEMENTS
-		if(	GAME.keys.lastPress === GAME.keys.allowed.KEY_ENTER &&
-				!GAME.keys.isPressing[ GAME.keys.allowed.KEY_ENTER ]	){
-			GAME.paused = !GAME.paused;
-			GAME.gameover = false;
-			GAME.keys.lastPress = null;
-		}
+		// CHECK PLAYER IS PAUSING GAME
+		this.isPausedGame();
 
 		// MOVEMENTS NO PAUSED
 		if( !GAME.paused ){
 			
 			// RELOAD INVADERS FIRST SCENE
-			if( GAME.gameover || GAME.score > 200){ // check if player win the boss
-				loadScene(GAME.scenes.invaders);
+			if( GAME.gameover){ // check if player win the boss
+				this.deathSpeceCraft();
 			
+			} else if ( GAME.score > 200 ) {
+				loadScene(GAME.scenes.invaders);
+
 			} else {
 				this.spaceMovements();
 
@@ -44,22 +44,11 @@
 		ctx.fillRect(0, 0, GAME.canvas.width, GAME.canvas.height);
 		
 		if( GAME.paused ){
-
-			ctx.textAlign = 'center';
-			if( !GAME.gameover ){
-				ctx.fillStyle ='#0f0';
-				ctx.fillText('STAGE 2', GAME.canvas.width/2, GAME.canvas.height/2-20);
-				ctx.fillText('DESTROY THE JOCKER', GAME.canvas.width/2, GAME.canvas.height/2);
-				ctx.fillText('press enter to play', GAME.canvas.width/2, (GAME.canvas.height/2)+20);
-			}else{
-				ctx.fillStyle ='#f0f';
-				ctx.fillText(	'GAME OVER', GAME.canvas.width/2, GAME.canvas.height/2);
-				ctx.fillText(	'press enter to reload game',
-									GAME.canvas.width/2, (GAME.canvas.height/2)+20);
-			}
+			this.paintPausedGame( ctx, 'STAGE 2', 'DESTROY THE JOCKER');
 
 		}else{
 			this.spaceRender(ctx, ctxBgd);
+			
 			// ENEMY
 
 		}
