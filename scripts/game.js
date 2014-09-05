@@ -24,8 +24,8 @@ var init = function (evLoad){
 	///////////////////////////////////////
 	// loadScene(GAME.scenes.invaders); //
 	///////////////////////////////////////
-	loadScene(GAME.scenes.jokerEnemy);
-
+	loadScene(GAME.scenes.greenGoblin);
+	
 	setCanvasFullScreen();
 	run();
 	repaint();
@@ -75,7 +75,8 @@ var GAME = {
 	// Asset for the gamer
 	player: {
 		spaceShip: new Asset(0, 0, 20, 20),
-		spaceShot: []
+		spaceShot: [],
+		winner: false
 	},
 	// Assets for enemies
 	machine:{
@@ -89,7 +90,15 @@ var GAME = {
 				shot: 30
 			}
 		},
-		greenGoblin: new Asset(0, 0, 30, 30) // green boss
+		goblin: {
+			asset: new Asset(10, 10, 60, 60, 20),
+			spaceShot: [],
+			shooterTimer: 0,
+			hardness: {
+				move: 7,
+				shot: 30
+			} 
+		}
 	},
 	sprite: new Image(),
 	bdgCanvas: new Image(),
@@ -98,7 +107,8 @@ var GAME = {
 	// kind of our game Scenes
 	scenes:{
 		invaders: null,
-		jokerEnemy: null
+		jokerEnemy: null,
+		greenGoblin: null
 	},
 	keys: {
 		lastPress: null,
@@ -125,6 +135,7 @@ Bgd.cosmos = new Bgd( 0, 0, GAME.canvas.width, GAME.canvas.height, 0);
 // create scene prototype and constructor heritance
 GAME.scenes.invaders = new Scene();
 GAME.scenes.jokerEnemy = new Scene();
+GAME.scenes.greenGoblin = new Scene();
 
 // indicar el estado de tecla presionada
 var onKeyPressed = function(evKeyDown){
@@ -139,16 +150,24 @@ var offKeyPressed = function (evKeyUp){
 };
 
 var repaint = function (){
-	requestAnimFrame(repaint);
-	resizeBuffer(350, 500);
-	// load render canvas Scene(), of actually scene
-	Scene.addScenes[ Scene.currentScene ].paint(GAME.ctx, GAME.ctxBgd);
+	if( !GAME.player.winner ){
+		requestAnimFrame(repaint);
+		resizeBuffer(350, 500);
+		// load render canvas Scene(), of actually scene
+		Scene.addScenes[ Scene.currentScene ].paint(GAME.ctx, GAME.ctxBgd);
+	
+	} else { //WINNER GAME
+		window.alert('MoooooooooooooLA');
+		document.location.href = 'http://html5-pro.com/wormz/';
+	}
 };
 
 var run = function (){
-	window.setTimeout(run, 1000/40); //FPS
-	// load action scene of actually scene
-	Scene.addScenes[ Scene.currentScene ].act();
+	if( !GAME.player.winner ){
+		window.setTimeout(run, 1000/40); //FPS
+		// load action scene of actually scene
+		Scene.addScenes[ Scene.currentScene ].act();
+	}
 };
 
 // set the current Scene

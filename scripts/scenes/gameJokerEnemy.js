@@ -4,11 +4,6 @@
 //////////////////
 (function(	spaceShip,
 				spaceShot,
-				invaders,
-				extraPoints,
-				multiShots,
-				messages,
-				extraHealth,
 				joker,
 				jokerShot,
 				jokerTimer,
@@ -43,11 +38,8 @@
 				loadScene( GAME.scenes.invaders );
 			
 			} else if( joker.health < 1 ){
-				/////////////////////////////////////////////
-				// loadScene(GAME.scenes.greenGoblin); //
-				/////////////////////////////////////////////
-				loadScene( GAME.scenes.invaders );
-				
+				loadScene(GAME.scenes.greenGoblin);
+
 			} else {
 				this.spaceMovements();
 
@@ -152,7 +144,6 @@
 				joker.drawImageArea(ctx, GAME.sprite, 590, 490, 130, 130, '#f00');
 			}
 
-
 			// multishots sprite render
 			for( var i = 0, l = jokerShot.length; i < l ; i++ ){
 				jokerShot[i].drawImageArea(ctx, GAME.sprite, 650, 640, 70, 70, '#cc6');
@@ -162,11 +153,6 @@
 
 }( GAME.player.spaceShip,
 	GAME.player.spaceShot,
-	GAME.machine.invaders,
-	GAME.powerups.extraPoints,
-	GAME.powerups.multiShots,
-	GAME.powerups.messages,
-	GAME.powerups.extraHealth,
 	GAME.machine.joker.asset,
 	GAME.machine.joker.spaceShot,
 	GAME.machine.joker.shooterTimer,
