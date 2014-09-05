@@ -70,21 +70,33 @@
 
 				// MOVE JOKER SHOOTS
 				for (var i = 0, len = jokerShot.length; i < len; i++) {
-				    jokerShot[i].posY += 5;
+					jokerShot[i].posY += 5;
 
-				    // remove shots outside canvas
-				    if( jokerShot[i].posY > GAME.canvas.height){
+				    // collisions
+					if( spaceShip.intersect(jokerShot[i]) ){
+				    	spaceShip.health--;
+						spaceShip.setDamage(20); // inmunity of 20 loops
+
+						// rest one multishot if  the spaceship has been reduce one health point
+						if( spaceShip.multishot > 1 ){
+							spaceShip.multishot--;
+						}
+
 						jokerShot.splice(i, 1);
 						len--;
-				    }
-				};
-
-
-
+					   
+					 // remove shots outside canvas
+					} else if ( jokerShot[i].posY > GAME.canvas.height ){
+				    	jokerShot.splice(i, 1);
+						len--;
+					}
+				}
 
 			}
+
+
 		}
-	};
+	}
 
 	GAME.scenes.jokerEnemy.paint = function( ctx, ctxBgd ){
 		ctx.fillStyle = 'rgba(0, 0, 0, 0.0)'; // transparent backgrounds
